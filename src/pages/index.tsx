@@ -168,6 +168,7 @@ export default function Home() {
         <div className="grid grid-cols-3 gap-2">
           {remainingStages.map((stage) => (
             <Stage
+              key={stage.id}
               onClick={handleStagePick}
               stageName={stage.stageName}
               img={stage.img}
@@ -188,6 +189,7 @@ export default function Home() {
         <div className="grid grid-cols-3 gap-2">
           {LEGAL_STAGES.map((legalStage) => (
             <Stage
+              key={legalStage.id}
               onClick={handleStageBan}
               stageName={legalStage.stageName}
               img={legalStage.img}
