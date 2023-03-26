@@ -14,9 +14,7 @@ const CommonLayout: React.FC<Props> = ({ children }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="px-2 flex items-center flex-col pt-20 h-screen bg-black text-white ">
-        {children}
-      </main>
+      <main className="mx-2 flex items-center flex-col mt-20">{children}</main>
     </>
   );
 };
