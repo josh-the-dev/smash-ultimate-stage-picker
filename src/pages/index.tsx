@@ -97,6 +97,7 @@ export default function Home() {
   if (selectedStage) {
     return (
       <CommonLayout>
+        <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
         <h3 className="text-2xl md:text-7xl mb-20">The selected stage is: </h3>
         <p className=" text-center text-2xl font-bold mb-6">
           {selectedStage.name}
@@ -124,6 +125,7 @@ export default function Home() {
     );
     return (
       <CommonLayout>
+        <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
         <h3 className="text-2xl md:text-7xl mb-28">
           Pick the stage to play on
         </h3>
@@ -147,6 +149,7 @@ export default function Home() {
   if (numberOfSetGames) {
     return (
       <CommonLayout>
+        <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
         <h3 className="text-2xl md:text-7xl mb-28">
           Ban phase {banTurn}: Ban {stageBansAllowed} stages
         </h3>
