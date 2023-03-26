@@ -124,7 +124,7 @@ export default function Home() {
     );
     return (
       <CommonLayout>
-        <h3 className="text-2xl md:text-7xl mb-32">
+        <h3 className="text-2xl md:text-7xl mb-28">
           Pick the stage to play on
         </h3>
         <div className="grid grid-cols-2 gap-2 ">
@@ -147,7 +147,7 @@ export default function Home() {
   if (numberOfSetGames) {
     return (
       <CommonLayout>
-        <h3 className="text-2xl md:text-7xl mb-32">
+        <h3 className="text-2xl md:text-7xl mb-28">
           Ban phase {banTurn}: Ban {stageBansAllowed} stages
         </h3>
         <div className="grid grid-cols-3 gap-2">
@@ -169,7 +169,7 @@ export default function Home() {
 
   return (
     <CommonLayout>
-      <h2 className="text-2xl md:text-7xl mb-32">
+      <h2 className="text-2xl md:text-7xl mb-28">
         Smash Ultimate Stage Picker
       </h2>
       <h3>Is it best of 3 or 5?</h3>
