@@ -132,8 +132,8 @@ export default function Home() {
     }
     console.log(setCount);
     console.log(numberOfSetGames);
-    if (numberOfSetGames && setCount > numberOfSetGames) {
-      // we've gone over the set count so lets reset stuff
+    if (numberOfSetGames && setCount === numberOfSetGames) {
+      // we've gone to the set count so lets reset stuff
       setNumberOfSetGames(null);
       setSetCount(0);
     }
