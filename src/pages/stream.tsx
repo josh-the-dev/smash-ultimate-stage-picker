@@ -9,7 +9,7 @@ const Stream = () => {
   const { data, error, isLoading } = useQuery<{ bannedStages: string[] }>(
     "bannedStages",
 
-    () => fetch(`${clientUrl}/api/stream-bans`).then((res) => res.json()),
+    () => fetch(`/api/stream-bans`).then((res) => res.json()),
     { refetchInterval: 500 }
   );
   return (

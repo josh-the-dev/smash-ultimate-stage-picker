@@ -72,8 +72,6 @@ export const Stage: React.FC<StageProps> = ({
 export default function Home({
   isConnected,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const clientUrl = process.env.CLIENT_URL;
-
   const [bannedStages, setBannedStages] = useState<string[]>([]);
   const [numberOfSetGames] = useState(5);
   const [selectedStage, setSelectedStage] = useState<{
@@ -87,7 +85,7 @@ export default function Home({
   const resetState = async () => {
     if (confirm("Are you sure you wish to reset the stage bans?")) {
       window.location.reload();
-      await fetch(`${clientUrl}/api/stream-bans`, {
+      await fetch(`/api/stream-bans`, {
         method: "delete",
       });
     }
@@ -104,7 +102,7 @@ export default function Home({
   const handleStageBan = async (stageName: string) => {
     if (!bannedStages.includes(stageName)) {
       setBannedStages((stages) => [stageName, ...stages]);
-      await fetch(`${clientUrl}/api/stream-bans`, {
+      await fetch(`/api/stream-bans`, {
         method: "post",
         body: JSON.stringify({
           bannedStage: stageName,
@@ -120,7 +118,7 @@ export default function Home({
   const handleStagePick = async (stageName: string) => {
     const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
     setSelectedStage({ img: legalStage!.img, name: legalStage!.stageName });
-    await fetch(`${clientUrl}/api/stream-bans`, {
+    await fetch(`/api/stream-bans`, {
       method: "delete",
     });
   };
