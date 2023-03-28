@@ -1,10 +1,17 @@
 import { LEGAL_STAGES } from "@/constants/legalStages";
 import CommonLayout from "@/layouts/CommonLayout";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import { Stage } from ".";
 
 const Stream = () => {
-  const [bannedStages, setBannedStages] = useState<string[]>([]);
+  const { data, error, isLoading } = useQuery<{ bannedStages: string[] }>(
+    "bannedStages",
+
+    () =>
+      fetch("http://localhost:3000/api/stream-bans").then((res) => res.json()),
+    { refetchInterval: 500 }
+  );
   return (
     <CommonLayout>
       <div className="flex ">
@@ -16,7 +23,7 @@ const Stream = () => {
             stageName={legalStage.stageName}
             showLabel={false}
             img={legalStage.img}
-            isBanned={bannedStages.includes(legalStage.stageName)}
+            isBanned={data?.bannedStages.includes(legalStage.stageName)}
             width={150}
             height={150}
           />

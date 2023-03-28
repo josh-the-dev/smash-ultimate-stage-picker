@@ -1,9 +1,11 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "@/styles/Home.module.css";
+import clientPromise from "../lib/mongodb";
 import { useEffect, useState } from "react";
 import { LEGAL_STAGES } from "@/constants/legalStages";
 import CommonLayout from "@/layouts/CommonLayout";
+import { InferGetServerSidePropsType } from "next";
 
 interface StageProps {
   stageName: string;
@@ -14,6 +16,29 @@ interface StageProps {
   height: number;
   showLabel?: boolean;
   readonly?: boolean;
+}
+
+export async function getServerSideProps() {
+  try {
+    await clientPromise;
+    // `await clientPromise` will use the default database passed in the MONGODB_URI
+    // However you can use another database (e.g. myDatabase) by replacing the `await clientPromise` with the following code:
+    //
+    // `const client = await clientPromise`
+    // `const db = client.db("myDatabase")`
+    //
+    // Then you can execute queries against your database like so:
+    // db.find({}) or any of the MongoDB Node Driver commands
+
+    return {
+      props: { isConnected: true },
+    };
+  } catch (e) {
+    console.error(e);
+    return {
+      props: { isConnected: false },
+    };
+  }
 }
 
 export const Stage: React.FC<StageProps> = ({
@@ -44,7 +69,9 @@ export const Stage: React.FC<StageProps> = ({
   );
 };
 
-export default function Home() {
+export default function Home({
+  isConnected,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [bannedStages, setBannedStages] = useState<string[]>([]);
   const [numberOfSetGames] = useState(5);
   const [selectedStage, setSelectedStage] = useState<{
@@ -55,9 +82,12 @@ export default function Home() {
   const [banTurn, setBanTurn] = useState<1 | 2 | 3>(1);
   const [stageBansAllowed, setStageBansAllowed] = useState<3 | 4>(3);
 
-  const resetState = () => {
+  const resetState = async () => {
     if (confirm("Are you sure you wish to reset the stage bans?")) {
       window.location.reload();
+      await fetch(`http://localhost:3000/api/stream-bans`, {
+        method: "delete",
+      });
     }
   };
 
@@ -69,9 +99,15 @@ export default function Home() {
     setStageBansAllowed(3);
   };
 
-  const handleStageBan = (stageName: string) => {
+  const handleStageBan = async (stageName: string) => {
     if (!bannedStages.includes(stageName)) {
       setBannedStages((stages) => [stageName, ...stages]);
+      await fetch(`http://localhost:3000/api/stream-bans`, {
+        method: "post",
+        body: JSON.stringify({
+          bannedStage: stageName,
+        }),
+      });
     }
     // remove as it's already there
     else {
@@ -79,9 +115,12 @@ export default function Home() {
     }
   };
 
-  const handleStagePick = (stageName: string) => {
+  const handleStagePick = async (stageName: string) => {
     const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
     setSelectedStage({ img: legalStage!.img, name: legalStage!.stageName });
+    await fetch(`http://localhost:3000/api/stream-bans`, {
+      method: "delete",
+    });
   };
 
   // TODO: Evaluate removing use effects, temporary measure cause it "works"
@@ -102,7 +141,7 @@ export default function Home() {
     }
     if (numberOfSetGames && setCount === numberOfSetGames) {
       // we've gone to the set count so lets reset stuff
-      setSetCount(0);
+      resetState();
     }
   }, [setCount, bannedStages, numberOfSetGames]);
 
@@ -164,6 +203,15 @@ export default function Home() {
   return (
     <CommonLayout>
       <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
+      {isConnected ? (
+        <h2 className="subtitle">You are connected to MongoDB</h2>
+      ) : (
+        <h2 className="subtitle">
+          You are NOT connected to MongoDB. Check the <code>README.md</code> for
+          instructions.
+        </h2>
+      )}
+
       <h3 className="text-2xl md:text-7xl mb-12">
         Ban phase {banTurn}: Ban {stageBansAllowed} stages
       </h3>
