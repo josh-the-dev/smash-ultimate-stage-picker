@@ -203,14 +203,6 @@ export default function Home({
   return (
     <CommonLayout>
       <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
-      {isConnected ? (
-        <h2 className="subtitle">You are connected to MongoDB</h2>
-      ) : (
-        <h2 className="subtitle">
-          You are NOT connected to MongoDB. Check the <code>README.md</code> for
-          instructions.
-        </h2>
-      )}
 
       <h3 className="text-2xl md:text-7xl mb-12">
         Ban phase {banTurn}: Ban {stageBansAllowed} stages
