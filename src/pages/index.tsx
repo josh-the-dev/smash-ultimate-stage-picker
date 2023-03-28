@@ -110,7 +110,7 @@ export default function Home() {
     return (
       <CommonLayout>
         <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
-        <h3 className="text-2xl md:text-7xl mb-20">The selected stage is: </h3>
+        <h3 className="text-2xl md:text-7xl mb-14">The selected stage is: </h3>
         <p className=" text-center text-2xl font-bold mb-6">
           {selectedStage.name}
         </p>
@@ -138,12 +138,12 @@ export default function Home() {
     return (
       <CommonLayout>
         <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
-        <h3 className="text-2xl md:text-7xl mb-28">
+        <h3 className="text-2xl md:text-7xl mb-14">
           Pick the stage to play on
         </h3>
         <div
           className={`grid ${
-            setCount > 0 ? "grid-cols-3" : "grid-cols-3"
+            setCount > 0 ? "grid-cols-3" : "grid-cols-2"
           } gap-2 `}
         >
           {remainingStages.map((stage) => (
@@ -164,7 +164,7 @@ export default function Home() {
   return (
     <CommonLayout>
       <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
-      <h3 className="text-2xl md:text-7xl mb-28">
+      <h3 className="text-2xl md:text-7xl mb-12">
         Ban phase {banTurn}: Ban {stageBansAllowed} stages
       </h3>
       <div className="grid grid-cols-3 gap-2">
