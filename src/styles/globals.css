@@ -14,3 +14,13 @@ body {
   overflow-x: hidden;
 }
 
+
+@font-face {
+  font-family: "eras";
+  src: url("/fonts/eras/ERAS8D.TTF");
+}
+
+@font-face {
+  font-family: "eras";
+  src: url("/fonts/eras/ErasBoldITC.ttf");
+}
