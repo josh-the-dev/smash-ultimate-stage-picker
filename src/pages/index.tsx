@@ -8,38 +8,45 @@ import CommonLayout from "@/layouts/CommonLayout";
 interface StageProps {
   stageName: string;
   img: string;
-  onClick: (stageName: string) => void;
+  onClick?: (stageName: string) => void;
   isBanned?: boolean;
   width: number;
   height: number;
+  showLabel?: boolean;
+  readonly?: boolean;
 }
 
-const Stage: React.FC<StageProps> = ({
+export const Stage: React.FC<StageProps> = ({
   stageName,
   img,
   onClick,
+  showLabel = true,
   isBanned = false,
+  readonly = false,
 }) => {
   const handleClick = (stageName: string) => {
-    onClick(stageName);
+    if (onClick) {
+      onClick(stageName);
+    }
   };
-
   return (
     <div
-      className={`hover:cursor-pointer hover:opacity-10 w-fit ${
-        isBanned ? "opacity-10" : null
-      }`}
+      className={`${
+        readonly ? null : "hover:cursor-pointer hover:opacity-10"
+      }  w-fit ${isBanned ? "opacity-10" : null}`}
       onClick={() => handleClick(stageName)}
     >
       <Image alt={stageName} src={img} width={150} height={150} />
-      <p className="text-center font-bold text-sm">{stageName}</p>
+      {showLabel && (
+        <p className="text-center font-bold text-sm">{stageName}</p>
+      )}
     </div>
   );
 };
 
 export default function Home() {
   const [bannedStages, setBannedStages] = useState<string[]>([]);
-  const [numberOfSetGames, setNumberOfSetGames] = useState<3 | 5 | null>();
+  const [numberOfSetGames] = useState(5);
   const [selectedStage, setSelectedStage] = useState<{
     img: string;
     name: string;
@@ -47,6 +54,12 @@ export default function Home() {
   const [setCount, setSetCount] = useState(0);
   const [banTurn, setBanTurn] = useState<1 | 2 | 3>(1);
   const [stageBansAllowed, setStageBansAllowed] = useState<3 | 4>(3);
+
+  const resetState = () => {
+    if (confirm("Are you sure you wish to reset the stage bans?")) {
+      window.location.reload();
+    }
+  };
 
   const handleNextGame = () => {
     setSetCount((c) => c + 1);
@@ -89,7 +102,6 @@ export default function Home() {
     }
     if (numberOfSetGames && setCount === numberOfSetGames) {
       // we've gone to the set count so lets reset stuff
-      setNumberOfSetGames(null);
       setSetCount(0);
     }
   }, [setCount, bannedStages, numberOfSetGames]);
@@ -129,7 +141,11 @@ export default function Home() {
         <h3 className="text-2xl md:text-7xl mb-28">
           Pick the stage to play on
         </h3>
-        <div className="grid grid-cols-2 gap-2 ">
+        <div
+          className={`grid ${
+            setCount > 0 ? "grid-cols-3" : "grid-cols-3"
+          } gap-2 `}
+        >
           {remainingStages.map((stage) => (
             <Stage
               key={stage.id}
@@ -145,51 +161,33 @@ export default function Home() {
     );
   }
 
-  // We can assume we're going into stage bans.
-  if (numberOfSetGames) {
-    return (
-      <CommonLayout>
-        <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
-        <h3 className="text-2xl md:text-7xl mb-28">
-          Ban phase {banTurn}: Ban {stageBansAllowed} stages
-        </h3>
-        <div className="grid grid-cols-3 gap-2">
-          {LEGAL_STAGES.map((legalStage) => (
-            <Stage
-              key={legalStage.id}
-              onClick={handleStageBan}
-              stageName={legalStage.stageName}
-              img={legalStage.img}
-              isBanned={bannedStages.includes(legalStage.stageName)}
-              width={150}
-              height={150}
-            />
-          ))}
-        </div>
-      </CommonLayout>
-    );
-  }
-
   return (
     <CommonLayout>
-      <h2 className="text-2xl md:text-7xl mb-28">
-        Smash Ultimate Stage Picker
-      </h2>
-      <h3>Is it best of 3 or 5?</h3>
-      <div className="flex gap-4">
-        <button
-          onClick={() => setNumberOfSetGames(3)}
-          className="bg-white text-black p-6 rounded-xl"
-        >
-          Best of 3
-        </button>
-        <button
-          onClick={() => setNumberOfSetGames(5)}
-          className="bg-white text-black p-6 rounded-xl"
-        >
-          Best of 5
-        </button>
+      <h2 className="text-2xl md:text-7xl mb-4">Game {setCount + 1}</h2>
+      <h3 className="text-2xl md:text-7xl mb-28">
+        Ban phase {banTurn}: Ban {stageBansAllowed} stages
+      </h3>
+      <div className="grid grid-cols-3 gap-2">
+        {LEGAL_STAGES.map((legalStage) => (
+          <Stage
+            key={legalStage.id}
+            onClick={handleStageBan}
+            stageName={legalStage.stageName}
+            img={legalStage.img}
+            isBanned={bannedStages.includes(legalStage.stageName)}
+            width={150}
+            height={150}
+          />
+        ))}
       </div>
+      <button
+        className="bg-white text-black p-6 rounded-xl mt-6"
+        onClick={() => {
+          resetState();
+        }}
+      >
+        Reset
+      </button>
     </CommonLayout>
   );
 }
