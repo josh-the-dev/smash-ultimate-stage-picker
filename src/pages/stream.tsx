@@ -9,7 +9,9 @@ const Stream = () => {
     "bannedStages",
 
     () =>
-      fetch("http://localhost:3000/api/stream-bans").then((res) => res.json()),
+      fetch(
+        "https://smash-ultimate-stage-picker.vercel.app/api/stream-bans"
+      ).then((res) => res.json()),
     { refetchInterval: 500 }
   );
   return (

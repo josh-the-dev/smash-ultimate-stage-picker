@@ -85,9 +85,12 @@ export default function Home({
   const resetState = async () => {
     if (confirm("Are you sure you wish to reset the stage bans?")) {
       window.location.reload();
-      await fetch(`http://localhost:3000/api/stream-bans`, {
-        method: "delete",
-      });
+      await fetch(
+        `https://smash-ultimate-stage-picker.vercel.app/api/stream-bans`,
+        {
+          method: "delete",
+        }
+      );
     }
   };
 
@@ -102,12 +105,15 @@ export default function Home({
   const handleStageBan = async (stageName: string) => {
     if (!bannedStages.includes(stageName)) {
       setBannedStages((stages) => [stageName, ...stages]);
-      await fetch(`http://localhost:3000/api/stream-bans`, {
-        method: "post",
-        body: JSON.stringify({
-          bannedStage: stageName,
-        }),
-      });
+      await fetch(
+        `https://smash-ultimate-stage-picker.vercel.app/api/stream-bans`,
+        {
+          method: "post",
+          body: JSON.stringify({
+            bannedStage: stageName,
+          }),
+        }
+      );
     }
     // remove as it's already there
     else {
@@ -118,9 +124,12 @@ export default function Home({
   const handleStagePick = async (stageName: string) => {
     const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
     setSelectedStage({ img: legalStage!.img, name: legalStage!.stageName });
-    await fetch(`http://localhost:3000/api/stream-bans`, {
-      method: "delete",
-    });
+    await fetch(
+      `https://smash-ultimate-stage-picker.vercel.app/api/stream-bans`,
+      {
+        method: "delete",
+      }
+    );
   };
 
   // TODO: Evaluate removing use effects, temporary measure cause it "works"
