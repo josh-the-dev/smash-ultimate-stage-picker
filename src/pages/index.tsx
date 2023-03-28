@@ -53,7 +53,7 @@ const Stage: React.FC<StageProps> = ({
       onClick={() => handleClick(stageName)}
     >
       <div className="w-full h-full relative">
-        <div className="bg-black h-full w-full -rotate-2 absolute z-0 -translate-y-4 -translate-x-1" />
+        <div className="bg-black h-full w-full -rotate-2 absolute z-0 -translate-y-4 -translate-x-0.5" />
         {showLabel && (
           <p className="text-white  font-eras  text-xs absolute -translate-y-4 z-20">
             {stageName}
