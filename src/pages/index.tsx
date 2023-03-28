@@ -228,9 +228,11 @@ export default function Home({
         {LEGAL_STAGES.map((legalStage, index) => {
           if (index + 1 === LEGAL_STAGES.length) {
             return (
-              <div className=" col-span-2 col-start-2 justify-self-center">
+              <div
+                key={legalStage.id}
+                className=" col-span-2 col-start-2 justify-self-center"
+              >
                 <Stage
-                  key={legalStage.id}
                   onClick={handleStageBan}
                   stageName={legalStage.stageName}
                   img={legalStage.img}
@@ -242,9 +244,11 @@ export default function Home({
             );
           }
           return (
-            <div className=" col-span-2 justify-self-center">
+            <div
+              key={legalStage.id}
+              className=" col-span-2 justify-self-center"
+            >
               <Stage
-                key={legalStage.id}
                 onClick={handleStageBan}
                 stageName={legalStage.stageName}
                 img={legalStage.img}
