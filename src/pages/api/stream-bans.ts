@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         { $set: { bannedStages: updatedBannedStages } },
         { upsert: true }
       );
-      return res.status(204);
+      return res.status(204).end();
     }
     if (req.method === "DELETE") {
       await bannedStagesCollection.updateOne(
@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         { $set: { bannedStages: [] } },
         { upsert: true }
       );
-      return res.status(204);
+      return res.status(204).end();
     } else {
       return res.status(200).json({ bannedStages: bannedStages });
     }

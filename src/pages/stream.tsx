@@ -5,13 +5,11 @@ import { useQuery } from "react-query";
 import { Stage } from ".";
 
 const Stream = () => {
+  const clientUrl = process.env.CLIENT_URL;
   const { data, error, isLoading } = useQuery<{ bannedStages: string[] }>(
     "bannedStages",
 
-    () =>
-      fetch(
-        "https://smash-ultimate-stage-picker.vercel.app/api/stream-bans"
-      ).then((res) => res.json()),
+    () => fetch(`${clientUrl}/api/stream-bans`).then((res) => res.json()),
     { refetchInterval: 500 }
   );
   return (
