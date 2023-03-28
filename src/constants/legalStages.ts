@@ -41,7 +41,7 @@ export const LEGAL_STAGES = [
   },
 
   {
-    id: 6,
+    id: 9,
     stageName: "Hollow Bastion",
     img: "/images/stages/hollow-bastion.jpg",
   },
