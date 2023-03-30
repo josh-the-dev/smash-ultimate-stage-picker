@@ -5,7 +5,7 @@ interface Props {
   children: ReactNode;
 }
 
-const CommonLayout: React.FC<Props> = ({ children }) => {
+const StreamLayout: React.FC<Props> = ({ children }) => {
   return (
     <>
       <Head>
@@ -14,11 +14,9 @@ const CommonLayout: React.FC<Props> = ({ children }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className=" px-2 flex items-center flex-col bg-gradient-to-br from-birthday-brawl-orange-100 to-birthday-brawl-orange-200 text-white h-full min-h-screen pt-4">
-        {children}
-      </main>
+      <main className="bg-black h-full min-h-screen">{children}</main>
     </>
   );
 };
 
-export default CommonLayout;
+export default StreamLayout;

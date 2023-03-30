@@ -73,9 +73,9 @@ const Stage: React.FC<StageProps> = ({
   );
 };
 
-export default function Home({
-  isConnected,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Home({}: InferGetServerSidePropsType<
+  typeof getServerSideProps
+>) {
   const [bannedStages, setBannedStages] = useState<string[]>([]);
   const [numberOfSetGames] = useState(5);
   const [selectedStage, setSelectedStage] = useState<{
@@ -89,6 +89,11 @@ export default function Home({
   const router = useRouter();
   const resetState = async () => {
     if (confirm("Are you sure you wish to reset the stage bans?")) {
+      if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
+        await fetch(`/api/stream-bans`, {
+          method: "delete",
+        });
+      }
       router.push("/");
     }
   };
@@ -104,6 +109,14 @@ export default function Home({
   const handleStageBan = async (stageName: string) => {
     if (!bannedStages.includes(stageName)) {
       setBannedStages((stages) => [stageName, ...stages]);
+      if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
+        await fetch(`/api/stream-bans`, {
+          method: "post",
+          body: JSON.stringify({
+            bannedStage: stageName,
+          }),
+        });
+      }
     }
     // remove as it's already there
     else {
@@ -114,6 +127,11 @@ export default function Home({
   const handleStagePick = async (stageName: string) => {
     const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
     setSelectedStage({ img: legalStage!.img, name: legalStage!.stageName });
+    if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
+      await fetch(`/api/stream-bans`, {
+        method: "delete",
+      });
+    }
   };
 
   // TODO: Evaluate removing use effects, temporary measure cause it "works"

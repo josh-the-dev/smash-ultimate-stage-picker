@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head />
-      <body className="bg-gradient-to-br from-birthday-brawl-orange-100 to-birthday-brawl-orange-200 text-white h-screen">
+      <body>
         <Main />
         <div className="absolute bottom-0 right-0">
           <Image

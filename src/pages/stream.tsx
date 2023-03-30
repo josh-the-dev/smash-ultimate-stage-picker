@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { StageProps } from "./picker";
 import Image from "next/image";
+import StreamLayout from "@/layouts/StreamLayout";
 
 export const Stage: React.FC<StageProps> = ({
   stageName,
@@ -35,7 +36,7 @@ const Stream = () => {
     { refetchInterval: 500 }
   );
   return (
-    <CommonLayout>
+    <StreamLayout>
       <div className="flex ">
         {LEGAL_STAGES.map((legalStage) => (
           <Stage
@@ -51,7 +52,7 @@ const Stream = () => {
           />
         ))}
       </div>
-    </CommonLayout>
+    </StreamLayout>
   );
 };
 
