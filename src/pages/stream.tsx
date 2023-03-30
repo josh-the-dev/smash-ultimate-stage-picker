@@ -2,7 +2,7 @@ import { LEGAL_STAGES } from "@/constants/legalStages";
 import CommonLayout from "@/layouts/CommonLayout";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { StageProps } from ".";
+import { StageProps } from "./picker";
 import Image from "next/image";
 
 export const Stage: React.FC<StageProps> = ({
