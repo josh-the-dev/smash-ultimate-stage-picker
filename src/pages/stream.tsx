@@ -5,7 +5,7 @@ import StreamLayout from "@/layouts/StreamLayout";
 import Stage from "@/components/Stage";
 
 const Stream = () => {
-  const { data, error, isLoading } = useQuery<{ bannedStages: string[] }>(
+  const { data } = useQuery<{ bannedStages: string[] }>(
     "bannedStages",
 
     () => fetch(`/api/stream-bans`).then((res) => res.json()),
@@ -18,7 +18,6 @@ const Stream = () => {
           <Stage
             readonly
             key={legalStage.id}
-            //   onClick={handleStageBan}
             stageName={legalStage.stageName}
             showLabel={false}
             img={legalStage.img}
