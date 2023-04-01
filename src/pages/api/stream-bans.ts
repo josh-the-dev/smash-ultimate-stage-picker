@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === "POST") {
       const requestJson = JSON.parse(req.body);
       const updatedBannedStages = [requestJson.bannedStage, ...bannedStages!];
-      const result = await bannedStagesCollection.updateOne(
+      await bannedStagesCollection.updateOne(
         { _id: objectId },
         { $set: { bannedStages: updatedBannedStages } },
         { upsert: true }
