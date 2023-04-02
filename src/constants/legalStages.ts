@@ -1,48 +1,58 @@
+import Battlefield from "../../public/images/stages/battlefield.webp";
+import FinalDestination from "../../public/images/stages/final-destination.jpg";
+import SmallBattlefield from "../../public/images/stages/small-battlefield.jpg";
+import Yoshis from "../../public/images/stages/yoshis-story.webp";
+import PokemonStadium from "../../public/images/stages/pokemon-stadium-2.webp";
+import SmashVille from "../../public/images/stages/smashville.webp";
+import Kalos from "../../public/images/stages/kalos.webp";
+import TownAndCity from "../../public/images/stages/town-and-city.webp";
+import HollowBastion from "../../public/images/stages/hollow-bastion.jpg";
+
 export const LEGAL_STAGES = [
   {
     id: 1,
     stageName: "Battlefield",
-    img: "/images/stages/battlefield.webp",
+    img: Battlefield,
   },
   {
     id: 2,
     stageName: "Final Destination",
-    img: "/images/stages/final-destination.jpg",
+    img: FinalDestination,
   },
   {
     id: 3,
     stageName: "Small Battlefield",
-    img: "/images/stages/small-battlefield.jpg",
+    img: SmallBattlefield,
   },
   {
     id: 4,
     stageName: "Yoshis Story",
-    img: "/images/stages/yoshis-story.webp",
+    img: Yoshis,
   },
   {
     id: 5,
     stageName: "Pokemon Stadium 2",
-    img: "/images/stages/pokemon-stadium-2.webp",
+    img: PokemonStadium,
   },
   {
     id: 6,
     stageName: "Smashville",
-    img: "/images/stages/smashville.webp",
+    img: SmashVille,
   },
   {
     id: 7,
     stageName: "Kalos",
-    img: "/images/stages/kalos.webp",
+    img: Kalos,
   },
   {
     id: 8,
     stageName: "Town & City",
-    img: "/images/stages/town-and-city.webp",
+    img: TownAndCity,
   },
 
   {
     id: 9,
     stageName: "Hollow Bastion",
-    img: "/images/stages/hollow-bastion.jpg",
+    img: HollowBastion,
   },
 ];
