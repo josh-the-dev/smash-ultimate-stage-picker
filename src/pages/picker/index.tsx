@@ -85,7 +85,7 @@ export default function Home() {
 
   const handleStagePick = async (stageName: string) => {
     const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
-    setSelectedStage({ img: legalStage!.img, name: legalStage!.stageName });
+    setSelectedStage({ img: legalStage!.img.src, name: legalStage!.stageName });
     if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
       await fetch(`/api/stream-bans`, {
         method: "delete",
@@ -143,7 +143,7 @@ export default function Home() {
                   <Stage
                     onClick={handleStageClick}
                     stageName={legalStage.stageName}
-                    img={legalStage.img}
+                    img={legalStage.img.src}
                     isBanned={bannedStages.includes(legalStage.stageName)}
                     width={125}
                     height={125}
