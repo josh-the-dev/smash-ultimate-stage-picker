@@ -36,6 +36,7 @@ const Stream = () => {
               className={`z-${legalStage.index}`}
               width={150}
               bannedCross={legalStage.crossImg}
+              isBanned={data?.bannedStages.includes(legalStage.stageName)}
             />
           ))}
         </div>
@@ -50,6 +51,7 @@ const Stream = () => {
                   : legalStage.img
               }
               bannedCross={legalStage.crossImg}
+              isBanned={data?.bannedStages.includes(legalStage.stageName)}
             />
           ))}
         </div>
