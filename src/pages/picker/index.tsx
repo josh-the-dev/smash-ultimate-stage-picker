@@ -17,8 +17,8 @@ export default function Home() {
   const router = useRouter();
 
   const resetState = async () => {
-    if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
-      await fetch(`/api/stream-bans`, {
+    if (router.query.id) {
+      await fetch(`/api/set-details?id=${router.query.id}`, {
         method: "delete",
       });
     }
@@ -68,8 +68,8 @@ export default function Home() {
   const handleStageBan = async (stageName: string) => {
     if (!bannedStages.includes(stageName)) {
       setBannedStages((stages) => [stageName, ...stages]);
-      if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
-        await fetch(`/api/stream-bans`, {
+      if (router.query.id) {
+        await fetch(`/api/stream-bans?id=${router.query.id}`, {
           method: "post",
           body: JSON.stringify({
             bannedStage: stageName,
@@ -86,8 +86,8 @@ export default function Home() {
   const handleStagePick = async (stageName: string) => {
     const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
     setSelectedStage({ img: legalStage!.img.src, name: legalStage!.stageName });
-    if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
-      await fetch(`/api/stream-bans`, {
+    if (router.query.id) {
+      await fetch(`/api/stream-bans?id=${router.query.id}`, {
         method: "delete",
       });
     }

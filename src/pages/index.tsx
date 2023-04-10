@@ -24,7 +24,7 @@ const Index = () => {
         <button
           onClick={() => {
             if (router.query.id) {
-              router.push(`/picker?id=${router.query.id}`);
+              router.push(`/players?id=${router.query.id}`);
             } else {
               router.push(`/picker`);
             }
