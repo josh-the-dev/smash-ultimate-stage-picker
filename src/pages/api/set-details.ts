@@ -26,7 +26,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const filteredSetDetails = setDetailsInfo.filter(
         (detail) => detail._id.toString() !== MAIN_STREAM_ID
       );
-      return res.status(200).json(filteredSetDetails);
+      const filteredSetDetailsDisplay = filteredSetDetails.map((set) => ({
+        id: set._id,
+        bannedStages: set.bannedStages,
+        playerOne: set.players[0] || "",
+        playerTwo: set.players[1] || "",
+      }));
+      return res.status(200).json(filteredSetDetailsDisplay);
     }
   } catch (e) {
     console.error(e);
