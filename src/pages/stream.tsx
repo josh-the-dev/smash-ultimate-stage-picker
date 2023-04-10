@@ -8,7 +8,10 @@ const Stream = () => {
   const { data } = useQuery<{ bannedStages: string[] }>(
     "bannedStages",
 
-    () => fetch(`/api/stream-bans`).then((res) => res.json()),
+    () =>
+      fetch(`/api/stream-bans?id=bb19e645-293e-4038-9283-c9ccdccfa6b7`).then(
+        (res) => res.json()
+      ),
     { refetchInterval: 500 }
   );
   const legalStagesBottom: typeof LEGAL_STREAM_STAGES = [];
