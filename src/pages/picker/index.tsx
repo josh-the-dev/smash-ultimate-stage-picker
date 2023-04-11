@@ -57,7 +57,12 @@ export default function Home() {
     resetState();
   }
 
-  const handleNextGame = () => {
+  const handleNextGame = async () => {
+    if (router.query.id) {
+      await fetch(`/api/stream-bans?id=${router.query.id}`, {
+        method: "delete",
+      });
+    }
     setSetCount((c) => c + 1);
     setSelectedStage(null);
     setBannedStages([]);
@@ -84,13 +89,17 @@ export default function Home() {
   };
 
   const handleStagePick = async (stageName: string) => {
-    const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
-    setSelectedStage({ img: legalStage!.img.src, name: legalStage!.stageName });
     if (router.query.id) {
       await fetch(`/api/stream-bans?id=${router.query.id}`, {
-        method: "delete",
+        method: "post",
+        body: JSON.stringify({
+          pickedStage: stageName,
+        }),
       });
     }
+    const legalStage = LEGAL_STAGES.find((l) => l.stageName === stageName);
+
+    setSelectedStage({ img: legalStage!.img.src, name: legalStage!.stageName });
   };
 
   const handleStageClick = async (stageName: string) => {

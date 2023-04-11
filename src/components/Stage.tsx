@@ -1,5 +1,6 @@
 import React from "react";
 import Image, { StaticImageData } from "next/image";
+import Checkmark from "../../public/images/stages/general_checkmark.png";
 
 export interface StageProps {
   stageName: string;
@@ -16,6 +17,7 @@ export interface StageProps {
 
 interface StreamStageProps extends StageProps {
   bannedCross: StaticImageData;
+  isPicked?: boolean;
 }
 
 export const StreamStage: React.FC<StreamStageProps> = ({
@@ -23,11 +25,25 @@ export const StreamStage: React.FC<StreamStageProps> = ({
   img,
   className,
   isBanned,
+  isPicked,
   bannedCross,
 }) => (
   <div className="relative">
     {isBanned && (
-      <Image className="absolute" priority alt={stageName} src={bannedCross} />
+      <Image
+        className="absolute"
+        priority
+        alt={`${stageName} banned`}
+        src={bannedCross}
+      />
+    )}
+    {isPicked && (
+      <Image
+        className="absolute"
+        priority
+        alt={"Stage picked"}
+        src={Checkmark}
+      />
     )}
     <Image className={className} priority alt={stageName} src={img} />
   </div>

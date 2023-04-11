@@ -5,7 +5,7 @@ import StreamLayout from "@/layouts/StreamLayout";
 import { StreamStage } from "@/components/Stage";
 
 const Stream = () => {
-  const { data } = useQuery<{ bannedStages: string[] }>(
+  const { data } = useQuery<{ bannedStages: string[]; pickedStage: string }>(
     "bannedStages",
 
     () =>
@@ -14,6 +14,7 @@ const Stream = () => {
       ),
     { refetchInterval: 500 }
   );
+  console.log(data);
   const legalStagesBottom: typeof LEGAL_STREAM_STAGES = [];
   const legalStagesTop: typeof LEGAL_STREAM_STAGES = [];
   LEGAL_STREAM_STAGES.forEach((legalStage, i) => {
@@ -36,6 +37,7 @@ const Stream = () => {
                   ? legalStage.bannedImg
                   : legalStage.img
               }
+              isPicked={legalStage.stageName === data?.pickedStage}
               className={`z-${legalStage.index}`}
               width={150}
               bannedCross={legalStage.crossImg}
@@ -48,6 +50,7 @@ const Stream = () => {
             <StreamStage
               key={legalStage.id}
               stageName={legalStage.stageName}
+              isPicked={legalStage.stageName === data?.pickedStage}
               img={
                 data?.bannedStages.includes(legalStage.stageName)
                   ? legalStage.bannedImg

@@ -40,9 +40,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       _id: string;
       bannedStages: string[];
       players: string[];
+      pickedStage: string;
     }>({ _id: objectId });
 
-    const { bannedStages, players } = setDetails!;
+    const { bannedStages, pickedStage } = setDetails!;
     switch (req.method) {
       case "POST":
         const requestJson = JSON.parse(req.body);
@@ -50,6 +51,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           await setDetailsCollection.updateOne(
             { _id: objectId },
             { $set: { players: requestJson.players } },
+            { upsert: true }
+          );
+          return res.status(204).end();
+        } else if (requestJson.pickedStage) {
+          await setDetailsCollection.updateOne(
+            { _id: objectId },
+            { $set: { pickedStage: requestJson.pickedStage } },
             { upsert: true }
           );
           return res.status(204).end();
@@ -68,12 +76,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       case "DELETE":
         await setDetailsCollection.updateOne(
           { _id: objectId },
-          { $set: { bannedStages: [] } },
+          { $set: { bannedStages: [], pickedStage: "" } },
           { upsert: true }
         );
         return res.status(204).end();
       default:
-        return res.status(200).json({ bannedStages: bannedStages });
+        return res
+          .status(200)
+          .json({ bannedStages: bannedStages, pickedStage });
     }
   } catch (e) {
     console.error(e);
