@@ -13,8 +13,9 @@ const Index = () => {
         playsInline
         className="min-w-full min-h-full max-h-full fixed right-0 bottom-0"
         muted
-        src={"./videos/splash_screen.webm"}
-      />
+      >
+        <source src={"./videos/splash_screen.webm"} />
+      </video>
 
       <div
         className={`fixed bottom-8 w-full justify-center transition flex ease-in duration-300 ${
