@@ -109,13 +109,46 @@ export default function Home() {
       await handleStageBan(stageName);
     }
   };
+  let setupTitle = "Stream";
 
+  switch (router.query.id) {
+    case "17b65c47-0569-4737-b462-00b447a8d541":
+      setupTitle = "Quad 1";
+      break;
+    case "194a72d2-877a-4996-b49f-dc0ed53e27d1":
+      setupTitle = "Quad 2";
+      break;
+    case "82cff7e4-ef12-48d5-b3a1-be998154ef2c":
+      setupTitle = "Quad 3";
+      break;
+    case "e699d052-41a1-473c-84e9-1f79c0ca786f":
+      setupTitle = "Quad 4";
+      break;
+    default:
+      break;
+  }
   return (
     <CommonLayout>
-      <PickerHeader
-        mainHeader={`Game ${setCount + 1}`}
-        subHeader={`Phase ${banTurn}`}
-      />
+      {router.query.id && (
+        <div className="fixed top-0 right-0">
+          <Image
+            src="/images/top_box.png"
+            alt="title box"
+            width={150}
+            height={150}
+          />
+
+          <h2 className="text-base  mb-4 font-eras absolute top-2 right-12 text-black -skew-y-6">
+            {setupTitle}
+          </h2>
+        </div>
+      )}
+      <div className="mt-2">
+        <PickerHeader
+          mainHeader={`Game ${setCount + 1}`}
+          subHeader={`Phase ${banTurn}`}
+        />
+      </div>
       <h3 className="text-3xl md:text-7xl mb-8 -mt-2 text-black font-extrabold font-eras">
         {subtitle}
       </h3>
