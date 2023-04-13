@@ -9,6 +9,7 @@ specifiers:
   eslint-config-next: 13.2.4
   mongodb: ^5.1.0
   next: 13.2.4
+  next-useragent: ^2.8.0
   postcss: ^8.4.21
   react: 18.2.0
   react-dom: 18.2.0
@@ -24,6 +25,7 @@ dependencies:
   eslint-config-next: 13.2.4_j4766f7ecgqbon3u7zlxn5zszu
   mongodb: 5.1.0
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+  next-useragent: 2.8.0_next@13.2.4
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-query: 3.39.3_biqbaboplfbrettd7655fr4n2y
@@ -1799,6 +1801,15 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: false
 
+  /next-useragent/2.8.0_next@13.2.4:
+    resolution: {integrity: sha512-SDmIfqdBg0Uxk9L/mHX+P3XPdjS7hPGkhdQJjgUa+f0pFORO33FS632A0C2BsIOHr0Eu/bZF3D/kAUrzl/3aYA==}
+    peerDependencies:
+      next: '>=10'
+    dependencies:
+      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+      ua-parser-js: 0.7.35
+    dev: false
+
   /next/13.2.4_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-g1I30317cThkEpvzfXujf0O4wtaQHtDCLhlivwlTJ885Ld+eOgcz7r3TGQzeU+cSRoNHtD8tsJgzxVdYojFssw==}
     engines: {node: '>=14.6.0'}
@@ -2533,6 +2544,10 @@ packages:
     resolution: {integrity: sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==}
     engines: {node: '>=12.20'}
     hasBin: true
+    dev: false
+
+  /ua-parser-js/0.7.35:
+    resolution: {integrity: sha512-veRf7dawaj9xaWEu9HoTVn5Pggtc/qj+kqTOFvNiN1l0YdxwC1kvel57UCjThjGa3BHBihE8/UJAHI+uQHmd/g==}
     dev: false
 
   /unbox-primitive/1.0.2:
