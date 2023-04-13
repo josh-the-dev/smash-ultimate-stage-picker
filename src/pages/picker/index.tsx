@@ -138,7 +138,7 @@ export default function Home() {
             height={150}
           />
 
-          <h2 className="text-base  mb-4 font-eras absolute top-2 right-12 text-black -skew-y-6">
+          <h2 className="text-xl font-bold  mb-4 font-eras absolute top-2 right-12 text-black -skew-y-6">
             {setupTitle}
           </h2>
         </div>
