@@ -16,12 +16,7 @@ export function getServerSideProps(context) {
 //@ts-ignore
 const Index = (props) => {
   let ua;
-  if (props.uaString) {
-    ua = useUserAgent(props.uaString);
-  } else {
-    ua = useUserAgent(window.navigator.userAgent);
-  }
-  console.log(ua.browser);
+  ua = useUserAgent(props.uaString);
   const [isVideoOver, setIsVideoOver] = useState(false);
   const router = useRouter();
   if (ua.isChrome) {
