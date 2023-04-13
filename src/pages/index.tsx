@@ -67,11 +67,9 @@ const Index = (props) => {
       >
         <button
           onClick={() => {
-            if (router.query.id === "bb19e645-293e-4038-9783-c9ccdccfa6b7") {
+            if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
               router.push(`/picker?id=${router.query.id}`);
-            } else if (
-              router.query.id !== "bb19e645-293e-4038-9783-c9ccdccfa6b7"
-            ) {
+            } else if (router.query.id) {
               router.push(`/players?id=${router.query.id}`);
             } else {
               router.push(`/picker`);
