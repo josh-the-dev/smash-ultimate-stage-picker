@@ -19,8 +19,6 @@ const Index = (props) => {
   ua = useUserAgent(props.uaString);
   const [isVideoOver, setIsVideoOver] = useState(false);
   const router = useRouter();
-  console.log(router.query.id);
-  console.log(router.query.id === "bb19e645-293e-4038-9783-c9ccdccfa6b7");
   if (ua.isChrome) {
     return (
       <CommonLayout>
@@ -41,11 +39,9 @@ const Index = (props) => {
         >
           <button
             onClick={() => {
-              if (router.query.id === "bb19e645-293e-4038-9783-c9ccdccfa6b7") {
+              if (router.query.id === "bb19e645-293e-4038-9283-c9ccdccfa6b7") {
                 router.push(`/picker?id=${router.query.id}`);
-              } else if (
-                router.query.id !== "bb19e645-293e-4038-9783-c9ccdccfa6b7"
-              ) {
+              } else if (router.query.id) {
                 router.push(`/players?id=${router.query.id}`);
               } else {
                 router.push(`/picker`);
