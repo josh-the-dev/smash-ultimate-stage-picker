@@ -7,8 +7,11 @@ import sbfImage from '$lib/assets/stages/small-battlefield.jpg';
 import svImage from '$lib/assets/stages/smashville.webp';
 import tacImage from '$lib/assets/stages/town-and-city.webp';
 import ysImage from '$lib/assets/stages/yoshis-story.webp';
+import type { Stage } from '$lib/types/stage.types';
 
-export const stageList = [
+
+
+export const stages: Stage[] = [
     { id: 1, name: 'Battlefield', src: battlefieldImage, isBanned: false, bannedBy: 0 },
     { id: 2, name: 'Small Battlefield', src: sbfImage, isBanned: false, bannedBy: 0 },
     { id: 3, name: 'Final Destination', src: fdImage, isBanned: false, bannedBy: 0 },

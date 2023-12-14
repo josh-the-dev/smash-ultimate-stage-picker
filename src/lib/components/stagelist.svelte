@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { stageList as stages } from './stages';
+	import Stage from './stage.svelte';
+	import { stages } from '../constants/stage.constants';
 	export let maxGameCount: 3 | 5;
 	let stageList = stages;
 	$: banCount = 0;
@@ -31,13 +32,5 @@
 </script>
 
 {#each stageList as stage}
-	<div class="text-center">
-		<button
-			class={`hover:opacity-40 ${stage.isBanned ? 'opacity-10' : null}`}
-			on:click={() => handleStageBan(stage.id)}
-		>
-			<img height="75" width="100" alt={stage.name} src={stage.src} />
-		</button>
-		<p>{stage.name}</p>
-	</div>
+	<Stage {stage} handleStageBan={(stageId) => handleStageBan(stageId)} />
 {/each}

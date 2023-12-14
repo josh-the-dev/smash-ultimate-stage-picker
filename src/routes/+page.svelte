@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Stagelist from '$lib/stagelist.svelte';
+	import Stagelist from '$lib/components/stagelist.svelte';
 </script>
 
 <h1>Welcome to smash stage selector</h1>
