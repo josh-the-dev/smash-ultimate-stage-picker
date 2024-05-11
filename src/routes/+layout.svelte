@@ -19,7 +19,7 @@
 					<p>X</p>
 				</div>
 			</div>
-			<div class="bg-[#142c26] py-20 px-12 flex justify-between items-end">
+			<div class="bg-[#142c26] flex flex-col md:flex-row py-20 px-12 justify-between items-end">
 				<img src={BfLogo} class="h-20 w-24" alt="battlefield" />
 				<img src={SbfLogo} class="h-16 w-24" alt="small battlefield" />
 				<img src={FdLogo} class="h-20 w-24" alt="final destination" />
