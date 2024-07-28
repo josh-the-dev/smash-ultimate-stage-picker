@@ -11,7 +11,7 @@
 <div class="bg-[#1a1c1c] h-screen w-full">
 	<div class="mx-8 py-8">
 		<img width="400" src={LunacityLogo} alt="lunacity logo" />
-		<div class="bg-[#378169] py-4 px-4">
+		<div class="bg-[#378169] pb-4 pt-1 px-2 rounded-lg">
 			<div class="flex justify-between my-2">
 				<h3>STAGE SELECTION</h3>
 				<div class="flex gap-4">
