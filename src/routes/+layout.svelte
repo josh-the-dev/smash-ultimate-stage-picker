@@ -10,6 +10,32 @@
 	import TnC from '../lib/assets/stages/Icon_TnC.png';
 	import Kalos from '../lib/assets/stages/Icon_Kalos.png';
 	import YStory from '../lib/assets/stages/Icon_YStory.png';
+
+	import { onMount } from 'svelte';
+	import { io } from 'socket.io-client';
+
+	let socket;
+	let message = '';
+
+	onMount(() => {
+		// Connect to the Socket.IO server
+		socket = io('http://localhost:3000');
+
+		// Handle server responses
+		socket.on('response', (response) => {
+			console.log('Received response from server:', response);
+		});
+
+		return () => {
+			socket.disconnect(); // Clean up on component unmount
+		};
+	});
+
+	const sendMessage = () => {
+		// Emit 'message' event with user input
+		socket.emit('message', { content: message });
+		message = ''; // Clear the input field after sending
+	};
 </script>
 
 <div class="bg-[#1a1c1c] h-screen w-full">
@@ -49,6 +75,8 @@
 				</div>
 			</div>
 		</div>
+		<input type="text" bind:value={message} placeholder="Type your message" />
+		<button on:click={sendMessage}>Send Message</button>
 		<slot />
 	</div>
 </div>
