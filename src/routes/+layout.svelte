@@ -30,7 +30,7 @@
 
 	onMount(() => {
 		// Connect to the Socket.IO server
-		socket = io('http://128.199.37.230:3000');
+		socket = io('https://socket.lunacity.be:3000');
 
 		// Handle updates from the server
 		socket.on('stageList', (data) => {
