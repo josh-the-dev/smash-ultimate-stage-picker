@@ -1,7 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(
+	cors({
+		origin: 'http://localhost:5173', // Include protocol and use proper URL format
+		methods: ['GET', 'POST'],
+		allowedHeaders: ['Content-Type', 'Authorization']
+	})
+);
 
 const http = require('http');
 const server = http.createServer(app);
