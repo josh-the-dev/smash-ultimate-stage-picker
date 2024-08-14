@@ -15,15 +15,35 @@
 	import { io } from 'socket.io-client';
 
 	let socket;
-	let message = '';
+	let stageList = [
+		{ id: 1, name: 'battlefield', logo: BfLogo },
+		{ id: 2, name: 'small battlefield', logo: SbfLogo },
+		{ id: 3, name: 'final destination', logo: FdLogo },
+		{ id: 4, name: 'pokemon stadium 2', logo: Ps2Logo },
+		{ id: 5, name: 'hollow bastion', logo: HBastion },
+		{ id: 6, name: 'smashville', logo: Svile },
+		{ id: 7, name: 'town and city', logo: TnC },
+		{ id: 8, name: 'kalos pokemon league', logo: Kalos },
+		{ id: 9, name: "yoshi's story", logo: YStory }
+	];
+	let bannedStages = [];
 
 	onMount(() => {
 		// Connect to the Socket.IO server
 		socket = io('http://128.199.37.230:3000');
 
-		// Handle server responses
-		socket.on('response', (response) => {
-			console.log('Received response from server:', response);
+		// Handle updates from the server
+		socket.on('stageList', (data) => {
+			stageList = stageList.map((stage) => {
+				const updatedStage = data.stageList.find((s) => s.id === stage.id);
+				return updatedStage ? { ...stage, ...updatedStage } : stage;
+			});
+			bannedStages = data.bannedStages;
+		});
+
+		socket.on('stagePicked', (pickedStage) => {
+			console.log(`Stage picked: ${pickedStage.name}`);
+			// Handle final stage selection (e.g., start the game)
 		});
 
 		return () => {
@@ -31,10 +51,18 @@
 		};
 	});
 
-	const sendMessage = () => {
-		// Emit 'message' event with user input
-		socket.emit('message', { content: message });
-		message = ''; // Clear the input field after sending
+	const banStage = (stageId) => {
+		// Emit 'banStage' event with the selected stage ID and player information
+		socket.emit('banStage', { stageId, player: 1 }); // Replace `player: 1` with the actual player identifier
+	};
+
+	const pickStage = (stageId) => {
+		// Emit 'pickStage' event with the selected stage ID
+		socket.emit('pickStage', stageId);
+	};
+
+	const isStageBanned = (stageId) => {
+		return bannedStages.some((bannedStage) => bannedStage.id === stageId);
 	};
 </script>
 
@@ -51,32 +79,31 @@
 			</div>
 			<div class="bg-[#142c26] py-20 px-12 flex flex-col gap-20">
 				<div class="flex justify-between items-end">
-					<img src={BfLogo} class="h-20 w-24" alt="battlefield" />
-					<img src={SbfLogo} class="h-16 w-24" alt="small battlefield" />
-					<img src={FdLogo} class="h-20 w-24" alt="final destination" />
-					<img src={Ps2Logo} class="h-16 w-24" alt="pokemon stadium 2" />
-					<img src={HBastion} class="h-16 w-24" alt="hollow bastion" />
+					{#each stageList.slice(0, 5) as stage}
+						<button
+							class="h-20 w-24"
+							on:click={() => (isStageBanned(stage.id) ? null : banStage(stage.id))}
+						>
+							<img
+								src={stage.logo}
+								class="h-20 w-24 {isStageBanned(stage.id) ? 'opacity-50' : ''}"
+								alt={stage.name}
+							/>
+						</button>
+					{/each}
 				</div>
 				<div class="flex justify-between px-28">
-					<img src={Svile} class="h-20 w-24" alt="smashville" />
-					<img src={TnC} class="h-20 w-24" alt="town and city" />
-					<img src={Kalos} class="h-20 w-24" alt="kalos" />
-					<img src={YStory} class="h-20 w-24" alt="yoshis story" />
+					{#each stageList.slice(5) as stage}
+						<button on:click={() => (isStageBanned(stage.id) ? null : banStage(stage.id))}>
+							<img
+								src={stage.logo}
+								class="h-20 w-24 {isStageBanned(stage.id) ? 'opacity-50' : ''}"
+								alt={stage.name}
+							/>
+						</button>
+					{/each}
 				</div>
 			</div>
 		</div>
-		<div class="my-12 mx-4 flex">
-			<div>
-				<div>
-					<p>Best of 3</p>
-				</div>
-				<div>
-					<p>Best of 5</p>
-				</div>
-			</div>
-		</div>
-		<input type="text" bind:value={message} placeholder="Type your message" />
-		<button on:click={sendMessage}>Send Message</button>
-		<slot />
 	</div>
 </div>
