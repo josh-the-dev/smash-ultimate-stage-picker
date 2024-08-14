@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-app.use(cors({ origin: 'localhost:5173' }));
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 const http = require('http');
 const server = http.createServer(app);
