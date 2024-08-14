@@ -19,7 +19,7 @@
 
 	onMount(() => {
 		// Connect to the Socket.IO server
-		socket = io('http://localhost:3000');
+		socket = io('http://128.199.37.230:3000');
 
 		// Handle server responses
 		socket.on('response', (response) => {
