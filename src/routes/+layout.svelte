@@ -57,9 +57,9 @@
 		};
 	});
 
-	const banStage = (stageId: number) => {
+	const banStage = (stageId: number, playerId: number) => {
 		// Emit 'banStage' event with the selected stage ID and player information
-		socket.emit('banStage', { stageId, player: 1 }); // Replace `player: 1` with the actual player identifier
+		socket.emit('banStage', { stageId, player: playerId }); // Replace `player: 1` with the actual player identifier
 	};
 
 	const pickStage = (stageId: number) => {
@@ -74,6 +74,19 @@
 	const resetStages = () => {
 		// Emit 'resetStages' event to reset the stage selection
 		socket.emit('reset');
+	};
+
+	$: handlePlayerToBan = () => {
+		const gameCount = 1;
+		if (gameCount == 1) {
+			if (bannedStages.length < 3 || bannedStages.length === 7) {
+				return 1;
+			} else {
+				return 2;
+			}
+		} else {
+			return 1;
+		}
 	};
 </script>
 
@@ -93,7 +106,8 @@
 					{#each stageList.slice(0, 5) as stage}
 						<button
 							class="h-20 w-24"
-							on:click={() => (isStageBanned(stage.id) ? null : banStage(stage.id))}
+							on:click={() =>
+								isStageBanned(stage.id) ? null : banStage(stage.id, handlePlayerToBan())}
 						>
 							<img
 								src={stage.logo}
@@ -105,7 +119,10 @@
 				</div>
 				<div class="flex justify-between px-28">
 					{#each stageList.slice(5) as stage}
-						<button on:click={() => (isStageBanned(stage.id) ? null : banStage(stage.id))}>
+						<button
+							on:click={() =>
+								isStageBanned(stage.id) ? null : banStage(stage.id, handlePlayerToBan())}
+						>
 							<img
 								src={stage.logo}
 								class="h-20 w-24 {isStageBanned(stage.id) ? 'opacity-50' : ''}"
@@ -116,6 +133,7 @@
 				</div>
 			</div>
 		</div>
+		<h2 class="text-2xl text-white">Player {handlePlayerToBan()} bans</h2>
 		<button class="py-2 bg-white px-4 rounded-md mt-2" on:click={() => resetStages()}>Reset</button>
 	</div>
 </div>
