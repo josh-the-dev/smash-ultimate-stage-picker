@@ -19,14 +19,14 @@ const io = require('socket.io')(server, {
 
 const startingStageList = [
 	{ id: 1, name: 'battlefield' },
-	{ id: 2, name: 'final destination' },
-	{ id: 3, name: 'smashville' },
-	{ id: 4, name: 'town and city' },
-	{ id: 5, name: "yoshi's story" },
-	{ id: 6, name: 'pokemon stadium 2' },
-	{ id: 7, name: 'kalos pokemon league' },
-	{ id: 8, name: 'small battlefield' },
-	{ id: 9, name: 'hollow bastion' }
+	{ id: 2, name: 'small battlefield' },
+	{ id: 3, name: 'final destination' },
+	{ id: 4, name: 'pokemon stadium 2' },
+	{ id: 5, name: 'hollow bastion' },
+	{ id: 6, name: 'smashville' },
+	{ id: 7, name: 'town and city' },
+	{ id: 8, name: 'kalos pokemon league' },
+	{ id: 9, name: "yoshi's story" }
 ];
 
 let currentStageList = [...startingStageList];

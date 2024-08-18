@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import '../app.css';
 	import LunacityLogo from '../lib/assets/Lunacity_Text.png';
 	import BfLogo from '../lib/assets/stages/Icon_BF.png';
@@ -12,9 +12,15 @@
 	import YStory from '../lib/assets/stages/Icon_YStory.png';
 
 	import { onMount } from 'svelte';
-	import { io } from 'socket.io-client';
+	import { io, Socket } from 'socket.io-client';
 
-	let socket;
+	type STAGE = {
+		id: number;
+		name: string;
+		logo: string;
+	};
+
+	let socket: Socket;
 	let stageList = [
 		{ id: 1, name: 'battlefield', logo: BfLogo },
 		{ id: 2, name: 'small battlefield', logo: SbfLogo },
@@ -26,7 +32,7 @@
 		{ id: 8, name: 'kalos pokemon league', logo: Kalos },
 		{ id: 9, name: "yoshi's story", logo: YStory }
 	];
-	let bannedStages = [];
+	let bannedStages: STAGE[] = [];
 
 	onMount(() => {
 		// Connect to the Socket.IO server
@@ -35,7 +41,7 @@
 		// Handle updates from the server
 		socket.on('stageList', (data) => {
 			stageList = stageList.map((stage) => {
-				const updatedStage = data.stageList.find((s) => s.id === stage.id);
+				const updatedStage = data.stageList.find((s: STAGE) => s.id === stage.id);
 				return updatedStage ? { ...stage, ...updatedStage } : stage;
 			});
 			bannedStages = data.bannedStages;
@@ -51,17 +57,17 @@
 		};
 	});
 
-	const banStage = (stageId) => {
+	const banStage = (stageId: number) => {
 		// Emit 'banStage' event with the selected stage ID and player information
 		socket.emit('banStage', { stageId, player: 1 }); // Replace `player: 1` with the actual player identifier
 	};
 
-	const pickStage = (stageId) => {
+	const pickStage = (stageId: number) => {
 		// Emit 'pickStage' event with the selected stage ID
 		socket.emit('pickStage', stageId);
 	};
 
-	const isStageBanned = (stageId) => {
+	const isStageBanned = (stageId: number) => {
 		return bannedStages.some((bannedStage) => bannedStage.id === stageId);
 	};
 </script>
