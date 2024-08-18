@@ -70,6 +70,11 @@
 	const isStageBanned = (stageId: number) => {
 		return bannedStages.some((bannedStage) => bannedStage.id === stageId);
 	};
+
+	const resetStages = () => {
+		// Emit 'resetStages' event to reset the stage selection
+		socket.emit('reset');
+	};
 </script>
 
 <div class="bg-[#1a1c1c] h-screen w-full">
@@ -111,5 +116,6 @@
 				</div>
 			</div>
 		</div>
+		<button class="py-2 bg-white px-4 rounded-md mt-2" on:click={() => resetStages()}>Reset</button>
 	</div>
 </div>
