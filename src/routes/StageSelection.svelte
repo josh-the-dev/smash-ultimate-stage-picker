@@ -25,7 +25,7 @@
 
 	function calculateBanningPlayer(game: number, banCount: number, winner: Player | null): Player {
 		if (game === 1) {
-			return banCount < 4 ? 1 : 2;
+			return banCount < 3 ? 1 : 2;
 		}
 		return winner ?? 1; // Default to player 1 if winner is null (shouldn't happen)
 	}
