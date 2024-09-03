@@ -13,10 +13,10 @@
 		<img src={pickedStage.logo} class="h-64 w-64 mb-8" alt={pickedStage.name} />
 		<h2 class="text-3xl text-white mb-8">Who won the game?</h2>
 		<div class="flex gap-4">
-			<button class="py-2 bg-blue-500 text-white px-4 rounded-md" on:click={() => setWinner(1)}>
+			<button class="py-2 bg-red-500 text-white px-4 rounded-md" on:click={() => setWinner(1)}>
 				Player 1
 			</button>
-			<button class="py-2 bg-red-500 text-white px-4 rounded-md" on:click={() => setWinner(2)}>
+			<button class="py-2 bg-blue-500 text-white px-4 rounded-md" on:click={() => setWinner(2)}>
 				Player 2
 			</button>
 		</div>
