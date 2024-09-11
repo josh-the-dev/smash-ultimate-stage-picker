@@ -6,7 +6,7 @@ import ps2Image from '$lib/assets/stages/PS2.png';
 import sbfImage from '$lib/assets/stages/Small Battlefield.png';
 import svImage from '$lib/assets/stages/Smashville.png';
 import tacImage from '$lib/assets/stages/Town and City.png';
-import ysImage from "$lib/assets/stages/Yoshi's Story.png";
+import ysImage from '$lib/assets/stages/Yoshis Story.png';
 import type { Stage } from '$lib/types/stage.types';
 
 export const stages: Stage[] = [
