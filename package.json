@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"cookie": "^0.6.0",
 		"socket.io-client": "^4.7.5"
 	}
 }
