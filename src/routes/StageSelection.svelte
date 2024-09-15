@@ -143,8 +143,8 @@
 	<div class="flex flex-col gap-12">
 		<div class="bg-[#378169] mt-4 pb-4 pt-1 px-3 rounded-lg">
 			<div class="flex justify-between items-center">
-				<h3 class="font-pixelify text-5xl py-2 uppercase">Stage selection</h3>
-				<img src={MinusAndClose} class="h-10 mr-2" alt="minue and close" />
+				<h3 class="font-pixelify text-3xl py-2 uppercase">Stage selection</h3>
+				<img src={MinusAndClose} class="h-4 mr-2" alt="minue and close" />
 			</div>
 			<StageGrid stageList={initialStageList} {availableStages} {gameState} {banStage} {pickStage} />
 		</div>
