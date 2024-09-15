@@ -140,36 +140,36 @@
 		<button class="py-2 bg-white px-4 rounded-md" on:click={resetAll}>Start New Series</button>
 	</div>
 {:else if gameState !== 'post-pick'}
-	<div class="flex flex-col gap-12">
+	<div class="flex flex-col gap-4">
 		<div class="bg-[#378169] mt-4 pb-4 pt-1 px-3 rounded-lg">
 			<div class="flex justify-between items-center">
-				<h3 class="font-pixelify text-3xl py-2 uppercase">Stage selection</h3>
+				<h3 class="font-pixelify text-2xl uppercase">Stage selection</h3>
 				<img src={MinusAndClose} class="h-4 mr-2" alt="minue and close" />
 			</div>
 			<StageGrid stageList={initialStageList} {availableStages} {gameState} {banStage} {pickStage} />
 		</div>
-		<div class="flex gap-8 items-center justify-center relative">
+		<div class="flex gap-8 items-center justify-center relative w-full">
 			<div class="flex flex-col gap-6">
 				<div class=" border border-[#378169] px-4 py-2 text-center">
-					<h3 class="font-pixelify uppercase text-3xl text-[#378169]">Best of 3</h3>
+					<h3 class="font-pixelify uppercase text-xl text-[#378169]">Best of 3</h3>
 				</div>
 				<div class="bg-[#378169] px-4 py-2 text-center">
-					<h3 class="font-pixelify uppercase text-3xl">Best of 5</h3>
+					<h3 class="font-pixelify uppercase text-xl">Best of 5</h3>
 				</div>
 			</div>
-			<div class="px-16 border-4 rounded-md py-10 border-[#378169] flex gap-8">
+			<div class="px-4 border-4 rounded-md py-10 border-[#378169] flex gap-8">
 				{#each images as image, i}
 					<div class="flex items-center gap-8">
 						<!-- <img src={LineMark} alt="line" class="h-3 w-24" /> -->
-						<img src={image} alt="stage" class="h-14 w-20" />
+						<img src={image} alt="stage" class="h-10 w-14" />
 						{#if i < images.length - 1}
-							<img src={Arrow} alt="arrow" class="h-14" />
+							<img src={Arrow} alt="arrow" class="h-8" />
 						{/if}
 					</div>
 				{/each}
 			</div>
 			<!-- Button with absolute positioning on the right -->
-			<button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button>
+			<!-- <button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button> -->
 		</div>
 	</div>
 

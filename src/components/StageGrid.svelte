@@ -10,7 +10,7 @@
 	$: isStageBanned = (stageId: number) => !availableStages.some((stage) => stage.id === stageId);
 </script>
 
-<div class="bg-[#142c26] py-6 px-8 flex flex-col pt-20 gap-8 relative">
+<div class="bg-[#142c26] py-6 pb-2 px-8 flex flex-col gap-8 relative">
 	<div class="flex justify-between items-end">
 		{#each stageList.slice(0, 5) as stage (stage.id)}
 			<button
@@ -20,7 +20,7 @@
 				style="opacity: {isStageBanned(stage.id) ? '0.5' : '1'}"
 			>
 				<img height="30" width="100" src={stage.logo} alt={stage.name} />
-				<p class=" text-white font-helvetica">{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}</p>
+				<p class="text-sm text-white font-helvetica">{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}</p>
 			</button>
 		{/each}
 	</div>
@@ -33,11 +33,11 @@
 				style="opacity: {isStageBanned(stage.id) ? '0.5' : '1'}"
 			>
 				<img height="30" width="100" src={stage.logo} alt={stage.name} />
-				<p class=" text-white font-helvetica">{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}</p>
+				<p class="text-sm text-white font-helvetica">{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}</p>
 			</button>
 		{/each}
 	</div>
 	<div class="bg-[#378169] px-8 mx-auto">
-		<h3 class="font-pixelify text-4xl">BAN 3 STAGES</h3>
+		<h3 class="font-pixelify text-3xl">BAN 3 STAGES</h3>
 	</div>
 </div>
