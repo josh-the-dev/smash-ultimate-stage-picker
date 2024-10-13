@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import StageSelection from './StageSelection.svelte';
 	// @ts-ignore
 	import * as cookie from 'cookie';
-	import PlayerSelection from './PlayerSelection.svelte';
 	import RockPaperScissors from './RockPaperScissors.svelte';
+	import IpadSelection from './IpadSelection.svelte';
 	let playerNumberCookie: number | null = null;
 	let isRockPaperScissorsWinner: boolean | null = null;
 
@@ -20,5 +19,5 @@
 	<RockPaperScissors />
 {/if}
 {#if !playerNumberCookie}
-	<PlayerSelection />
+	<IpadSelection />
 {/if}

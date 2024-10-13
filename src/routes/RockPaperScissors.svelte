@@ -22,10 +22,11 @@
 
 	onMount(() => {
 		// Connect to the Socket.IO server
-		socket = io('https://socket.lunacity.be');
+		socket = io('http://localhost:3000');
 
 		socket.on('rpsWinner', (data) => {
-			console.log(`RPS Winner: ${data}`);
+			document.cookie = `rpsWinner=${data}`;
+			window.location.href = '/stage-selection';
 		});
 		return () => {
 			socket.disconnect(); // Clean up on component unmount

@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { io, Socket } from 'socket.io-client';
-	import StageGrid from '../components/StageGrid.svelte';
-	import GameStatus from '../components/GameStatus.svelte';
-	import WinnerSelection from '../components/WinnerSelection.svelte';
-	import type { STAGE } from '../types';
-	import { stageList as initialStageList } from '../data/stages';
+	import StageGrid from '../../components/StageGrid.svelte';
+	import GameStatus from '../../components/GameStatus.svelte';
+	import WinnerSelection from '../../components/WinnerSelection.svelte';
+	import type { STAGE } from '../../types';
+	import { stageList as initialStageList } from '../../data/stages';
 	import Arrow from '$lib/assets/Arrow.png';
 	import LineMark from '$lib/assets/LineMark.png';
 	import SelectedBF from '$lib/assets/selected-stages/Selected_BF.png';
 	import SelectedHb from '$lib/assets/selected-stages/Selected_HBastion.png';
 	import SelectedKalos from '$lib/assets/selected-stages/Selected_Kalos.png';
 	import MinusAndClose from '$lib/assets/minus_and_x.png';
+
+	// @ts-ignore
+	import * as cookie from 'cookie';
 
 	type Player = 1 | 2;
 
@@ -31,9 +34,9 @@
 
 	function calculateBanningPlayer(game: number, banCount: number, winner: Player | null): Player {
 		if (game === 1) {
-			return banCount < 3 ? 1 : 2;
+			return banCount < 3 ? winner! : winner === 1 ? 2 : 1;
 		}
-		return winner ?? 1; // Default to player 1 if winner is null (shouldn't happen)
+		return winner!;
 	}
 
 	function calculatePickingPlayer(game: number, winner: Player | null): Player {
@@ -105,21 +108,19 @@
 
 		// Handle updates from the server
 		socket.on('stageList', (data) => {
-			console.log('Received stageList:', data);
 			availableStages = data.stageList.map((stage: STAGE) => {
 				const fullStage = initialStageList.find((s) => s.id === stage.id);
 				return { ...stage, logo: fullStage ? fullStage.logo : '' };
 			});
 			bannedStages = data.bannedStages;
-			console.log('Available stages:', availableStages);
-			console.log('Banned stages:', bannedStages);
 		});
 
 		socket.on('stagePicked', (pickedStage) => {
-			console.log(`Stage picked: ${pickedStage.name}`);
 			// Handle final stage selection (e.g., start the game)
 		});
 
+		const cookies = cookie.parse(document.cookie);
+		lastWinner = cookies['rpsWinner'];
 		return () => {
 			socket.disconnect(); // Clean up on component unmount
 		};
@@ -146,7 +147,7 @@
 				<h3 class="font-pixelify text-2xl uppercase">Stage selection</h3>
 				<img src={MinusAndClose} class="h-4 mr-2" alt="minue and close" />
 			</div>
-			<StageGrid stageList={initialStageList} {availableStages} {gameState} {banStage} {pickStage} />
+			<StageGrid stageList={initialStageList} {availableStages} {gameState} {banStage} {pickStage} {banningPlayer} />
 		</div>
 		<div class="flex gap-8 items-center justify-center relative w-full">
 			<div class="flex flex-col gap-6">
@@ -169,7 +170,7 @@
 				{/each}
 			</div>
 			<!-- Button with absolute positioning on the right -->
-			<!-- <button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button> -->
+			<button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button>
 		</div>
 	</div>
 
