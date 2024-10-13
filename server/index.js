@@ -41,7 +41,8 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
 	console.log('A user connected:', socket.id);
 
-	socket.emit('rockPaperScissors', (winner) => {
+	socket.on('rockPaperScissors', (winner) => {
+		console.log('hi');
 		rockPaperScissorsWinner = winner;
 
 		io.emit('rpsWinner', winner);
