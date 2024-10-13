@@ -32,6 +32,8 @@ const startingStageList = [
 let currentStageList = [...startingStageList];
 let bannedStages = []; // To track which stages have been banned and by whom
 
+let rockPaperScissorsWinner = null;
+
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html');
 });
@@ -39,6 +41,11 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
 	console.log('A user connected:', socket.id);
 
+	socket.emit('rockPaperScissors', (winner) => {
+		rockPaperScissorsWinner = winner;
+
+		io.emit('rpsWinner', winner);
+	});
 	// Send the current stage list and banned stages to the client when they connect
 	socket.emit('stageList', { stageList: currentStageList, bannedStages });
 

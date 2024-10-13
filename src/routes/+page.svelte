@@ -4,12 +4,15 @@
 	// @ts-ignore
 	import * as cookie from 'cookie';
 	import PlayerSelection from './PlayerSelection.svelte';
+	import RockPaperScissors from './RockPaperScissors.svelte';
 	let playerNumberCookie: number | null = null;
+	let isRockPaperScissorsWinner: boolean | null = null;
 
 	onMount(() => {
 		// This code runs only in the browser
 		const cookies = cookie.parse(document.cookie);
 		playerNumberCookie = cookies['playerNumber'];
+		isRockPaperScissorsWinner = cookies['rockPaperScissorsWinner'];
 	});
 </script>
 
