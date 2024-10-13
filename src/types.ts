@@ -3,3 +3,5 @@ export type STAGE = {
 	name: string;
 	logo: string;
 };
+
+export type GamePhase = 'banning' | 'picking' | 'post-pick' | 'set-end';

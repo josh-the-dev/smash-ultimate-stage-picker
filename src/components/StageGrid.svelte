@@ -1,24 +1,23 @@
 <script lang="ts">
-	import type { STAGE } from '../types';
-
-	export let stageList: STAGE[];
-	export let availableStages: STAGE[];
-	export let gameState: string;
-	export let banStage: (stageId: number) => void;
-	export let pickStage: (stageId: number) => void;
-	export let banningPlayer: number;
-
+	import type { STAGE, GamePhase } from '../types';
 	// @ts-ignore
 	import * as cookie from 'cookie';
 
+	export let stageList: STAGE[];
+	export let availableStages: STAGE[];
+	export let gamePhase: GamePhase;
+	export let banStage: (stageId: number) => void;
+	export let pickStage: (stageId: number) => void;
+	export let banningPlayer: number;
+	export let currentGame: number;
+
 	const handleSelection = (stageId: number) => {
 		const cookies = cookie.parse(document.cookie);
-		const deviceNumber = cookies['playerNumber'];
-		console.log(deviceNumber);
+		const deviceNumber = parseInt(cookies['playerNumber']);
 		if (banningPlayer === deviceNumber) {
-			if (gameState === 'picking') {
+			if (gamePhase === 'picking') {
 				pickStage(stageId);
-			} else {
+			} else if (gamePhase === 'banning') {
 				banStage(stageId);
 			}
 		}
@@ -55,6 +54,12 @@
 		{/each}
 	</div>
 	<div class="bg-[#378169] px-8 mx-auto">
-		<h3 class="font-pixelify text-3xl">BAN 3 STAGES</h3>
+		<h3 class="font-pixelify text-3xl">
+			{#if gamePhase === 'banning'}
+				BAN {currentGame === 1 ? '3' : '1'} STAGE{currentGame === 1 ? 'S' : ''}
+			{:else if gamePhase === 'picking'}
+				PICK A STAGE
+			{/if}
+		</h3>
 	</div>
 </div>

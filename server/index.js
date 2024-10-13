@@ -1,17 +1,19 @@
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
+const socketIo = require('socket.io');
+
 const app = express();
 app.use(
 	cors({
-		origin: 'https://picker.lunacity.be', // Include protocol and use proper URL format
+		origin: 'https://picker.lunacity.be',
 		methods: ['GET', 'POST'],
 		allowedHeaders: ['Content-Type', 'Authorization']
 	})
 );
 
-const http = require('http');
 const server = http.createServer(app);
-const io = require('socket.io')(server, {
+const io = socketIo(server, {
 	cors: {
 		origin: '*'
 	}
@@ -29,10 +31,38 @@ const startingStageList = [
 	{ id: 9, name: "yoshi's story" }
 ];
 
-let currentStageList = [...startingStageList];
-let bannedStages = []; // To track which stages have been banned and by whom
+let gameState = {
+	currentStageList: [...startingStageList],
+	bannedStages: [],
+	rpsWinner: null,
+	currentGame: 1,
+	currentBanCount: 0,
+	gamePhase: 'banning', // 'banning', 'picking', 'post-pick'
+	player1Wins: 0,
+	player2Wins: 0
+};
 
-let rockPaperScissorsWinner = null;
+function calculateBanningPlayer() {
+	if (gameState.currentGame === 1) {
+		return gameState.currentBanCount < 3 ? gameState.rpsWinner : gameState.rpsWinner === 1 ? 2 : 1;
+	}
+	return gameState.rpsWinner;
+}
+
+function resetGame() {
+	gameState.currentStageList = [...startingStageList];
+	gameState.bannedStages = [];
+	gameState.currentBanCount = 0;
+	gameState.gamePhase = 'banning';
+}
+
+function resetSet() {
+	resetGame();
+	gameState.currentGame = 1;
+	gameState.rpsWinner = null;
+	gameState.player1Wins = 0;
+	gameState.player2Wins = 0;
+}
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html');
@@ -42,53 +72,79 @@ io.on('connection', (socket) => {
 	console.log('A user connected:', socket.id);
 
 	socket.on('rockPaperScissors', (winner) => {
-		console.log('hi');
-		rockPaperScissorsWinner = winner;
-
-		io.emit('rpsWinner', winner);
+		gameState.rpsWinner = winner;
+		io.emit('gameState', gameState);
 	});
-	// Send the current stage list and banned stages to the client when they connect
-	socket.emit('stageList', { stageList: currentStageList, bannedStages });
 
 	socket.on('banStage', (data) => {
 		const { stageId, player } = data;
 
-		// Find and ban the stage
-		const stageIndex = currentStageList.findIndex((stage) => stage.id === stageId);
-		if (stageIndex !== -1) {
-			const bannedStage = currentStageList.splice(stageIndex, 1)[0];
-			bannedStages.push({ ...bannedStage, bannedBy: player });
+		if (gameState.gamePhase !== 'banning' || player !== calculateBanningPlayer()) {
+			socket.emit('error', 'Invalid ban attempt');
+			return;
+		}
 
-			// Notify all clients about the updated stage list and banned stages
-			io.emit('stageList', { stageList: currentStageList, bannedStages });
+		const stageIndex = gameState.currentStageList.findIndex((stage) => stage.id === stageId);
+		if (stageIndex !== -1) {
+			const bannedStage = gameState.currentStageList.splice(stageIndex, 1)[0];
+			gameState.bannedStages.push({ ...bannedStage, bannedBy: player });
+			gameState.currentBanCount++;
+
+			if (
+				(gameState.currentGame === 1 && gameState.currentBanCount === 7) ||
+				(gameState.currentGame > 1 && gameState.currentBanCount === 3)
+			) {
+				gameState.gamePhase = 'picking';
+			}
+
+			io.emit('gameState', gameState);
 		}
 	});
 
 	socket.on('pickStage', (stageId) => {
-		// Handle when a stage is picked (e.g., to finalize the selection)
-		const pickedStage = currentStageList.find((stage) => stage.id === stageId);
+		if (gameState.gamePhase !== 'picking') {
+			socket.emit('error', 'Invalid pick attempt');
+			return;
+		}
+
+		const pickedStage = gameState.currentStageList.find((stage) => stage.id === stageId);
 		if (pickedStage) {
 			console.log(`Stage picked: ${pickedStage.name}`);
-			io.emit('stagePicked', pickedStage);
-
-			// Reset the game state after picking a stage
-			currentStageList = [...startingStageList];
-			bannedStages = [];
+			gameState.gamePhase = 'post-pick';
+			io.emit('gameState', gameState);
 		}
 	});
 
-	socket.on('reset', () => {
-		console.log('Resetting stage list.');
-		currentStageList = [...startingStageList];
-		bannedStages = [];
+	socket.on('setWinner', (player) => {
+		if (gameState.gamePhase !== 'post-pick') {
+			socket.emit('error', 'Invalid winner set attempt');
+			return;
+		}
 
-		// Notify all clients that the stage list has been reset
-		io.emit('stageList', { stageList: currentStageList, bannedStages });
+		if (player === 1) {
+			gameState.player1Wins++;
+		} else {
+			gameState.player2Wins++;
+		}
+
+		if (gameState.player1Wins === 3 || gameState.player2Wins === 3) {
+			gameState.gamePhase = 'set-end';
+		} else {
+			gameState.currentGame++;
+			resetGame();
+		}
+
+		gameState.rpsWinner = player; // Set the winner as the first to ban in the next game
+		io.emit('gameState', gameState);
+	});
+
+	socket.on('reset', () => {
+		resetSet();
+		io.emit('gameState', gameState);
 	});
 
 	socket.on('disconnect', () => {
 		console.log('A user disconnected:', socket.id);
-		// No specific logic for disconnect in this simplified version
 	});
 });
 

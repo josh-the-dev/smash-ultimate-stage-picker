@@ -6,175 +6,115 @@
 	import WinnerSelection from '../../components/WinnerSelection.svelte';
 	import type { STAGE } from '../../types';
 	import { stageList as initialStageList } from '../../data/stages';
-	import Arrow from '$lib/assets/Arrow.png';
-	import LineMark from '$lib/assets/LineMark.png';
-	import SelectedBF from '$lib/assets/selected-stages/Selected_BF.png';
-	import SelectedHb from '$lib/assets/selected-stages/Selected_HBastion.png';
-	import SelectedKalos from '$lib/assets/selected-stages/Selected_Kalos.png';
-	import MinusAndClose from '$lib/assets/minus_and_x.png';
-
-	// @ts-ignore
-	import * as cookie from 'cookie';
 
 	type Player = 1 | 2;
+	type GamePhase = 'banning' | 'picking' | 'post-pick' | 'set-end';
+
+	interface GameState {
+		currentStageList: STAGE[];
+		bannedStages: STAGE[];
+		rpsWinner: Player | null;
+		currentGame: number;
+		currentBanCount: number;
+		gamePhase: GamePhase;
+		player1Wins: number;
+		player2Wins: number;
+	}
 
 	let socket: Socket;
-	let availableStages: STAGE[] = [...initialStageList]; // Initialize with all stages
-	let bannedStages: STAGE[] = [];
-	let currentGame = 1;
-	let currentBanCount = 0;
-	let gameState: 'banning' | 'picking' | 'post-pick' | 'series-end' = 'banning';
-	let pickedStage: STAGE | null = null;
-	let lastWinner: Player | null = null;
-	let player1Wins = 0;
-	let player2Wins = 0;
+	let gameState: GameState;
 
-	$: banningPlayer = calculateBanningPlayer(currentGame, currentBanCount, lastWinner);
-	$: pickingPlayer = calculatePickingPlayer(currentGame, lastWinner);
+	// $: banningPlayer = calculateBanningPlayer(gameState);
+	// $: pickingPlayer = calculatePickingPlayer(gameState);
 
-	function calculateBanningPlayer(game: number, banCount: number, winner: Player | null): Player {
-		if (game === 1) {
-			return banCount < 3 ? winner! : winner === 1 ? 2 : 1;
+	function calculateBanningPlayer(state: GameState): Player {
+		if (state.currentGame === 1) {
+			return state.currentBanCount < 3 ? state.rpsWinner! : state.rpsWinner === 1 ? 2 : 1;
 		}
-		return winner!;
+		return state.rpsWinner!;
 	}
 
-	function calculatePickingPlayer(game: number, winner: Player | null): Player {
-		if (game === 1) return 1;
-		return winner === 1 ? 2 : 1;
+	function calculatePickingPlayer(state: GameState): Player {
+		return state.currentGame === 1 ? 1 : state.rpsWinner === 1 ? 2 : 1;
 	}
 
-	function banStage(stageId: number) {
-		if (gameState === 'banning' && !isStageBanned(stageId)) {
-			socket.emit('banStage', { stageId, player: banningPlayer });
-			// Immediately update local state
-			availableStages = availableStages.filter((stage) => stage.id !== stageId);
-			bannedStages = [...bannedStages, initialStageList.find((stage) => stage.id === stageId)!];
-			currentBanCount++;
-			if ((currentGame === 1 && currentBanCount === 7) || (currentGame > 1 && currentBanCount === 3)) {
-				gameState = 'picking';
-			}
-		}
-	}
+	// function banStage(stageId: number) {
+	// 	if (gameState.gamePhase === 'banning') {
+	// 		socket.emit('banStage', { stageId, player: banningPlayer });
+	// 	}
+	// }
 
 	function pickStage(stageId: number) {
-		if (gameState === 'picking' && !isStageBanned(stageId)) {
-			pickedStage = initialStageList.find((stage) => stage.id === stageId) || null;
+		if (gameState.gamePhase === 'picking') {
 			socket.emit('pickStage', stageId);
-			gameState = 'post-pick';
 		}
 	}
 
 	function setWinner(player: Player) {
-		lastWinner = player;
-		if (player === 1) {
-			player1Wins++;
-		} else {
-			player2Wins++;
-		}
-
-		if (player1Wins === 3 || player2Wins === 3) {
-			gameState = 'series-end';
-		} else {
-			currentGame++;
-			resetGameState();
+		if (gameState.gamePhase === 'post-pick') {
+			socket.emit('setWinner', player);
 		}
 	}
 
-	function resetGameState() {
-		currentBanCount = 0;
-		gameState = 'banning';
-		availableStages = [...initialStageList]; // Reset available stages
-		bannedStages = []; // Reset banned stages
+	function resetSet() {
 		socket.emit('reset');
 	}
 
-	function resetAll() {
-		currentGame = 1;
-		lastWinner = null;
-		player1Wins = 0;
-		player2Wins = 0;
-		gameState = 'banning';
-		resetGameState();
-	}
-
-	function isStageBanned(stageId: number) {
-		return !availableStages.some((stage) => stage.id === stageId);
-	}
-
 	onMount(() => {
-		// Connect to the Socket.IO server
 		socket = io('https://socket.lunacity.be');
 
-		// Handle updates from the server
-		socket.on('stageList', (data) => {
-			availableStages = data.stageList.map((stage: STAGE) => {
-				const fullStage = initialStageList.find((s) => s.id === stage.id);
-				return { ...stage, logo: fullStage ? fullStage.logo : '' };
-			});
-			bannedStages = data.bannedStages;
+		socket.on('gameState', (newState: GameState) => {
+			console.log(newState);
+			gameState = newState;
 		});
 
-		socket.on('stagePicked', (pickedStage) => {
-			// Handle final stage selection (e.g., start the game)
+		socket.on('error', (errorMessage: string) => {
+			console.error('Server error:', errorMessage);
+			// Handle error (e.g., display to user)
 		});
 
-		const cookies = cookie.parse(document.cookie);
-		lastWinner = cookies['rpsWinner'];
 		return () => {
-			socket.disconnect(); // Clean up on component unmount
+			socket.disconnect();
 		};
 	});
-
-	const images = [SelectedBF, SelectedHb, SelectedKalos, SelectedBF, SelectedBF];
 </script>
 
-{#if gameState === 'series-end'}
+<!-- {#if gameState.gamePhase === 'set-end'}
 	<div class="text-center mt-8">
-		<h2 class="text-3xl text-white mb-4">Series Ended!</h2>
+		<h2 class="text-3xl text-white mb-4">Set Ended!</h2>
 		<p class="text-2xl text-white mb-4">
-			Player 1: {player1Wins} - Player 2: {player2Wins}
+			Player 1: {gameState.player1Wins} - Player 2: {gameState.player2Wins}
 		</p>
 		<p class="text-2xl text-white mb-8">
-			{player1Wins > player2Wins ? 'Player 1' : 'Player 2'} wins the series!
+			{gameState.player1Wins > gameState.player2Wins ? 'Player 1' : 'Player 2'} wins the set!
 		</p>
-		<button class="py-2 bg-white px-4 rounded-md" on:click={resetAll}>Start New Series</button>
+		<button class="py-2 bg-white px-4 rounded-md" on:click={resetSet}>Start New Set</button>
 	</div>
-{:else if gameState !== 'post-pick'}
+{:else if gameState.gamePhase !== 'post-pick'}
 	<div class="flex flex-col gap-4">
 		<div class="bg-[#378169] mt-4 pb-4 pt-1 px-3 rounded-lg">
 			<div class="flex justify-between items-center">
 				<h3 class="font-pixelify text-2xl uppercase">Stage selection</h3>
-				<img src={MinusAndClose} class="h-4 mr-2" alt="minue and close" />
 			</div>
-			<StageGrid stageList={initialStageList} {availableStages} {gameState} {banStage} {pickStage} {banningPlayer} />
+			<StageGrid
+				stageList={initialStageList}
+				availableStages={gameState.currentStageList}
+				gamePhase={gameState.gamePhase}
+				{banStage}
+				{pickStage}
+				{banningPlayer}
+				currentGame={gameState.currentGame}
+			/>
 		</div>
-		<div class="flex gap-8 items-center justify-center relative w-full">
-			<div class="flex flex-col gap-6">
-				<div class=" border border-[#378169] px-4 py-2 text-center">
-					<h3 class="font-pixelify uppercase text-xl text-[#378169]">Best of 3</h3>
-				</div>
-				<div class="bg-[#378169] px-4 py-2 text-center">
-					<h3 class="font-pixelify uppercase text-xl">Best of 5</h3>
-				</div>
-			</div>
-			<div class="px-4 border-4 rounded-md py-10 border-[#378169] flex gap-8">
-				{#each images as image, i}
-					<div class="flex items-center gap-8">
-						<!-- <img src={LineMark} alt="line" class="h-3 w-24" /> -->
-						<img src={image} alt="stage" class="h-10 w-14" />
-						{#if i < images.length - 1}
-							<img src={Arrow} alt="arrow" class="h-8" />
-						{/if}
-					</div>
-				{/each}
-			</div>
-			<!-- Button with absolute positioning on the right -->
-			<!-- <button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button> -->
-		</div>
+		<GameStatus
+			gamePhase={gameState.gamePhase}
+			{banningPlayer}
+			{pickingPlayer}
+			currentGame={gameState.currentGame}
+			player1Wins={gameState.player1Wins}
+			player2Wins={gameState.player2Wins}
+		/>
 	</div>
-
-	<!-- <GameStatus {gameState} {banningPlayer} {pickingPlayer} {currentGame} {player1Wins} {player2Wins} /> -->
-{:else}
-	<WinnerSelection {pickedStage} {setWinner} />
-{/if}
+{:else} -->
+<WinnerSelection pickedStage={initialStageList[0]} {setWinner} />
+<!-- {/if} -->

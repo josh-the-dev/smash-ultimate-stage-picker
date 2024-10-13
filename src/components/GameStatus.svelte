@@ -1,5 +1,7 @@
 <script lang="ts">
-	export let gameState: string;
+	import type { GamePhase } from '../types';
+
+	export let gamePhase: GamePhase;
 	export let banningPlayer: number;
 	export let pickingPlayer: number;
 	export let currentGame: number;
@@ -12,10 +14,12 @@
 		Game {currentGame} of 5: Player 1 {player1Wins} - {player2Wins} Player 2
 	</h2>
 	<p class="text-xl">
-		{#if gameState === 'banning'}
+		{#if gamePhase === 'banning'}
 			Player {banningPlayer} bans
-		{:else}
+		{:else if gamePhase === 'picking'}
 			Player {pickingPlayer} picks
+		{:else if gamePhase === 'post-pick'}
+			Waiting for game result
 		{/if}
 	</p>
 </div>

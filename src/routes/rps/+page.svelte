@@ -20,13 +20,23 @@
 		socket.emit('rockPaperScissors', winnerNumber);
 	};
 
+	interface GameState {
+		rpsWinner: number | null;
+		currentGame: number;
+		currentBanCount: number;
+		player1Wins: number;
+		player2Wins: number;
+	}
+
 	onMount(() => {
 		// Connect to the Socket.IO server
-		socket = io('http://localhost:3000');
+		socket = io('https://socket.lunacity.be');
 
-		socket.on('rpsWinner', (data) => {
-			document.cookie = `rpsWinner=${data}`;
-			window.location.href = '/stage-selection';
+		socket.on('gameState', (data: GameState) => {
+			if (data.rpsWinner) {
+				document.cookie = `rpsWinner=${data.rpsWinner}`;
+				window.location.href = '/stage-selection';
+			}
 		});
 		return () => {
 			socket.disconnect(); // Clean up on component unmount
