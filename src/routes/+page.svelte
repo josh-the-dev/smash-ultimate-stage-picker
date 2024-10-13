@@ -17,7 +17,7 @@
 </script>
 
 {#if playerNumberCookie}
-	<StageSelection />
+	<RockPaperScissors />
 {/if}
 {#if !playerNumberCookie}
 	<PlayerSelection />
