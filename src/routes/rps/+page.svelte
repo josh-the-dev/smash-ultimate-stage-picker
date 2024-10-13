@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import lunacityBanner from '../lib/assets/lunacity-banner.png';
+	import lunacityBanner from '$lib/assets/lunacity-banner.png';
 	import { io, Socket } from 'socket.io-client';
 	// @ts-ignore
 	import * as cookie from 'cookie';

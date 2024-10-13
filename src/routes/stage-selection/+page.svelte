@@ -170,7 +170,7 @@
 				{/each}
 			</div>
 			<!-- Button with absolute positioning on the right -->
-			<button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button>
+			<!-- <button class="font-pixelify text-2xl bg-[#378169] px-6 uppercase h-12 absolute right-8" on:click={resetAll}> Reset </button> -->
 		</div>
 	</div>
 

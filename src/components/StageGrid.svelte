@@ -54,7 +54,6 @@
 			</button>
 		{/each}
 	</div>
-	<p class="text-white font-bold">{banningPlayer}</p>
 	<div class="bg-[#378169] px-8 mx-auto">
 		<h3 class="font-pixelify text-3xl">BAN 3 STAGES</h3>
 	</div>

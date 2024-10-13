@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	// @ts-ignore
 	import * as cookie from 'cookie';
-	import RockPaperScissors from './RockPaperScissors.svelte';
 	import IpadSelection from './IpadSelection.svelte';
 	let playerNumberCookie: number | null = null;
 	let isRockPaperScissorsWinner: boolean | null = null;
@@ -16,7 +15,7 @@
 </script>
 
 {#if playerNumberCookie}
-	<RockPaperScissors />
+	{(window.location.href = '/rps')}
 {/if}
 {#if !playerNumberCookie}
 	<IpadSelection />
