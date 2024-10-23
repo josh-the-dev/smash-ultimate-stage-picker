@@ -2,8 +2,8 @@
 	import type { GamePhase } from '../types';
 
 	export let gamePhase: GamePhase;
-	export let banningPlayer: number;
-	export let pickingPlayer: number;
+	export let banningPlayer: number | null;
+	export let pickingPlayer: number | null;
 	export let currentGame: number;
 	export let player1Wins: number;
 	export let player2Wins: number;

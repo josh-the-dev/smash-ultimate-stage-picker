@@ -21,7 +21,7 @@
 	};
 
 	interface GameState {
-		rpsWinner: number | null;
+		currentBanningPlayer: number | null;
 		currentGame: number;
 		currentBanCount: number;
 		player1Wins: number;
@@ -30,11 +30,12 @@
 
 	onMount(() => {
 		// Connect to the Socket.IO server
-		socket = io('https://socket.lunacity.be');
+		socket = io('localhost:3000');
 
 		socket.on('gameState', (data: GameState) => {
-			if (data.rpsWinner) {
-				document.cookie = `rpsWinner=${data.rpsWinner}`;
+			console.log(data);
+			if (data.currentBanningPlayer) {
+				document.cookie = `rpsWinner=${data.currentBanningPlayer}`;
 				window.location.href = '/stage-selection';
 			}
 		});

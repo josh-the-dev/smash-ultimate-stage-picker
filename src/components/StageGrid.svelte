@@ -1,23 +1,26 @@
 <script lang="ts">
-	import type { STAGE, GamePhase } from '../types';
+	import type { Stage, GamePhase } from '../types';
 	// @ts-ignore
 	import * as cookie from 'cookie';
 
-	export let stageList: STAGE[];
-	export let availableStages: STAGE[];
+	export let stageList: Stage[];
+	export let availableStages: Stage[];
 	export let gamePhase: GamePhase;
 	export let banStage: (stageId: number) => void;
 	export let pickStage: (stageId: number) => void;
-	export let banningPlayer: number;
+	export let banningPlayer: number | null;
 	export let currentGame: number;
 
 	const handleSelection = (stageId: number) => {
 		const cookies = cookie.parse(document.cookie);
 		const deviceNumber = parseInt(cookies['playerNumber']);
+
+		// Only allow selection if it's the player's turn
 		if (banningPlayer === deviceNumber) {
 			if (gamePhase === 'picking') {
 				pickStage(stageId);
 			} else if (gamePhase === 'banning') {
+				console.log('???');
 				banStage(stageId);
 			}
 		}
@@ -36,7 +39,9 @@
 				style="opacity: {isStageBanned(stage.id) ? '0.5' : '1'}"
 			>
 				<img height="30" width="100" src={stage.logo} alt={stage.name} />
-				<p class="text-sm text-white font-helvetica">{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}</p>
+				<p class="text-sm text-white font-helvetica">
+					{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}
+				</p>
 			</button>
 		{/each}
 	</div>
@@ -49,7 +54,9 @@
 				style="opacity: {isStageBanned(stage.id) ? '0.5' : '1'}"
 			>
 				<img height="30" width="100" src={stage.logo} alt={stage.name} />
-				<p class="text-sm text-white font-helvetica">{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}</p>
+				<p class="text-sm text-white font-helvetica">
+					{stage.name.replace(/(^\w|\s\w)/g, (m) => m.toUpperCase())}
+				</p>
 			</button>
 		{/each}
 	</div>

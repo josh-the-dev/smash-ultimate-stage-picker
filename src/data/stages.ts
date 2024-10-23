@@ -7,9 +7,9 @@ import sbfImage from '$lib/assets/stages/Small Battlefield.png';
 import svImage from '$lib/assets/stages/Smashville.png';
 import tacImage from '$lib/assets/stages/Town and City.png';
 import ysImage from '$lib/assets/stages/Yoshis Story.png';
-import type { STAGE } from '../types';
+import type { Stage } from '../types';
 
-export const stageList: STAGE[] = [
+export const stageList: Stage[] = [
 	{ id: 1, name: 'battlefield', logo: battlefieldImage },
 	{ id: 2, name: 'small battlefield', logo: sbfImage },
 	{ id: 3, name: 'final destination', logo: fdImage },
