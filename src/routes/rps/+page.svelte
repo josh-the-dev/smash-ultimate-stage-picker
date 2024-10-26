@@ -30,7 +30,7 @@
 
 	onMount(() => {
 		// Connect to the Socket.IO server
-		socket = io('localhost:3000');
+		socket = io('https://socket.lunacity.be');
 
 		socket.on('gameState', (data: GameState) => {
 			console.log(data);

@@ -16,4 +16,5 @@ export interface GameState {
 	gamePhase: GamePhase;
 	player1Wins: number;
 	player2Wins: number;
+	selectedStage: Stage | null;
 }

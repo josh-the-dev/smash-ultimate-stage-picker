@@ -4,8 +4,9 @@
 	import StageGrid from '../../components/StageGrid.svelte';
 	import GameStatus from '../../components/GameStatus.svelte';
 	import WinnerSelection from '../../components/WinnerSelection.svelte';
-	import type { GamePhase, GameState, Player, Stage } from '../../types';
+	import type { GameState } from '../../types';
 	import { stageList } from '../../data/stages';
+	import { redirect } from '@sveltejs/kit';
 
 	let socket: Socket;
 	let isConnecting = true;
@@ -19,7 +20,8 @@
 		currentBanCount: 0,
 		gamePhase: 'banning',
 		player1Wins: 0,
-		player2Wins: 0
+		player2Wins: 0,
+		selectedStage: null
 	};
 
 	$: banningPlayer = calculateBanningPlayer(gameState);
@@ -27,33 +29,39 @@
 
 	function calculateBanningPlayer(state: GameState): number | null {
 		if (!state.currentBanningPlayer) return null;
-
 		if (state.currentGame === 1) {
+			if (state.gamePhase === 'picking') {
+				return state.currentBanningPlayer;
+			}
 			return state.currentBanCount < 3 ? state.currentBanningPlayer : state.currentBanningPlayer === 1 ? 2 : 1;
 		}
+
 		return state.currentBanningPlayer;
 	}
 
 	function calculatePickingPlayer(state: GameState): number | null {
 		if (!state.currentBanningPlayer) return null;
-
+		console.log(state.currentBanningPlayer);
 		return state.currentGame === 1 ? 1 : state.currentBanningPlayer === 1 ? 2 : 1;
 	}
 
 	onMount(() => {
-		socket = io('http://localhost:3000', {
+		socket = io('https://socket.lunacity.be', {
 			transports: ['websocket'],
 			reconnection: true
 		});
 
 		socket.on('connect', () => {
-			console.log('Connected to server');
 			isConnecting = false;
 			socket.emit('requestState');
 		});
 
+		socket.once('gameOver', () => {
+			window.location.href = '/';
+			document.cookie = 'rpsWinner=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+		});
+
 		socket.on('gameState', (newState: GameState) => {
-			console.log('Received game state:', newState);
 			gameState = {
 				...newState,
 				currentStageList: newState.currentStageList.map((stage) => ({
@@ -69,17 +77,20 @@
 	});
 
 	function banStage(stageId: number) {
-		console.log('I am here');
-		console.log(stageId);
 		if (gameState.gamePhase === 'banning') {
 			socket.emit('banStage', { stageId, player: banningPlayer });
 		}
 	}
 
 	function pickStage(stageId: number) {
+		console.log('Im picking');
 		if (gameState.gamePhase === 'picking') {
 			socket.emit('pickStage', stageId);
 		}
+	}
+
+	function resetGame() {
+		socket.emit('reset');
 	}
 </script>
 
@@ -89,6 +100,7 @@
 	</div>
 {:else if gameState.gamePhase === 'banning' || gameState.gamePhase === 'picking'}
 	<div class="flex flex-col gap-4">
+		<button on:click={() => resetGame()}>RTeset</button>
 		<StageGrid
 			{stageList}
 			availableStages={gameState.currentStageList}
@@ -107,6 +119,9 @@
 			player2Wins={gameState.player2Wins}
 		/>
 	</div>
-{:else if gameState.gamePhase === 'post-pick'}
-	<WinnerSelection pickedStage={gameState.currentStageList[0]} setWinner={(player) => socket.emit('setWinner', player)} />
+{:else if gameState.gamePhase === 'post-pick' && gameState.selectedStage}
+	<WinnerSelection
+		pickedStage={stageList.find((s) => s.id === gameState.selectedStage?.id)}
+		setWinner={(player) => socket.emit('setWinner', player)}
+	/>
 {/if}

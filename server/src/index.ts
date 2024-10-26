@@ -17,6 +17,8 @@ interface GameState {
 	gamePhase: 'banning' | 'picking' | 'post-pick' | 'set-end';
 	player1Wins: number;
 	player2Wins: number;
+	initialBanningPlayer: number | null;
+	selectedStage: Stage | null;
 }
 
 const app = express();
@@ -25,7 +27,7 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
 	cors: {
-		origin: 'http://localhost:5173', // Update this to match your Svelte app's URL
+		origin: 'https://picker.lunacity.be', // Update this to match your Svelte app's URL
 		methods: ['GET', 'POST']
 	}
 });
@@ -48,25 +50,41 @@ const getInitialGameState = (): GameState => ({
 	currentStageList: [...startingStageList],
 	bannedStages: [],
 	currentBanningPlayer: null,
+	initialBanningPlayer: null,
 	currentGame: 1,
 	currentBanCount: 0,
 	gamePhase: 'banning',
 	player1Wins: 0,
-	player2Wins: 0
+	player2Wins: 0,
+	selectedStage: null
 });
 
 let gameState = getInitialGameState();
-
 const calculateBanningPlayer = () => {
 	if (gameState.currentGame === 1) {
-		return gameState.currentBanCount < 3 ? gameState.currentBanningPlayer : gameState.currentBanningPlayer === 1 ? 2 : 1;
+		// First banning player bans 3 stages, then switches to the other player for 4 bans
+		if (gameState.currentBanCount < 3) {
+			return gameState.initialBanningPlayer;
+		} else if (gameState.currentBanCount < 7) {
+			return gameState.initialBanningPlayer === 1 ? 2 : 1;
+		}
 	}
 	return gameState.currentBanningPlayer;
 };
 
+const calculatePickingPlayer = () => {
+	if (gameState.currentGame === 1) {
+		// In game 1, the picking player is the one who banned first
+		return gameState.initialBanningPlayer;
+	} else {
+		// In subsequent games, the picking player is the opposite of the banning player
+		return gameState.currentBanningPlayer === 1 ? 2 : 1;
+	}
+};
+
 io.on('connection', (socket) => {
 	console.log('Client connected:', socket.id);
-
+	console.log(gameState);
 	// Send initial game state to newly connected client
 	socket.emit('gameState', gameState);
 
@@ -75,13 +93,15 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('rockPaperScissors', (winner: number) => {
+		console.log('winner here');
 		gameState.currentBanningPlayer = winner;
+		gameState.initialBanningPlayer = winner;
 		io.emit('gameState', gameState);
 	});
 
 	socket.on('banStage', ({ stageId, player }: { stageId: number; player: number }) => {
 		if (gameState.gamePhase !== 'banning' || player !== calculateBanningPlayer()) {
-			socket.emit('error', 'Invalid ban attempt');
+			console.log('not your turn to ban');
 			return;
 		}
 
@@ -96,6 +116,7 @@ io.on('connection', (socket) => {
 				(gameState.currentGame > 1 && gameState.currentBanCount === 3)
 			) {
 				gameState.gamePhase = 'picking';
+				gameState.currentBanningPlayer = calculatePickingPlayer();
 			}
 
 			io.emit('gameState', gameState);
@@ -111,6 +132,7 @@ io.on('connection', (socket) => {
 		const pickedStage = gameState.currentStageList.find((stage) => stage.id === stageId);
 		if (pickedStage) {
 			gameState.gamePhase = 'post-pick';
+			gameState.selectedStage = pickedStage;
 			io.emit('gameState', gameState);
 		}
 	});
@@ -120,6 +142,7 @@ io.on('connection', (socket) => {
 			socket.emit('error', 'Invalid winner set attempt');
 			return;
 		}
+		console.log(player === 1);
 
 		if (player === 1) {
 			gameState.player1Wins++;
@@ -128,16 +151,18 @@ io.on('connection', (socket) => {
 		}
 
 		if (gameState.player1Wins === 3 || gameState.player2Wins === 3) {
-			gameState.gamePhase = 'set-end';
+			io.emit('gameOver');
+			gameState = getInitialGameState();
 		} else {
 			gameState.currentGame++;
 			gameState.currentStageList = [...startingStageList];
 			gameState.bannedStages = [];
 			gameState.currentBanCount = 0;
 			gameState.gamePhase = 'banning';
+
+			gameState.currentBanningPlayer = player;
 		}
 
-		gameState.currentBanningPlayer = player;
 		io.emit('gameState', gameState);
 	});
 
