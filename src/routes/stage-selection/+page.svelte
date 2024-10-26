@@ -46,10 +46,7 @@
 	}
 
 	onMount(() => {
-		socket = io('https://socket.lunacity.be', {
-			transports: ['websocket'],
-			reconnection: true
-		});
+		socket = io('https://socket.lunacity.be');
 
 		socket.on('connect', () => {
 			isConnecting = false;
