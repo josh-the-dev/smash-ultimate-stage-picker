@@ -97,7 +97,6 @@
 	</div>
 {:else if gameState.gamePhase === 'banning' || gameState.gamePhase === 'picking'}
 	<div class="flex flex-col gap-4">
-		<button on:click={() => resetGame()}>RTeset</button>
 		<StageGrid
 			{stageList}
 			availableStages={gameState.currentStageList}
