@@ -106,14 +106,14 @@
 			{banningPlayer}
 			currentGame={gameState.currentGame}
 		/>
-		<GameStatus
-			gamePhase={gameState.gamePhase}
-			{banningPlayer}
-			{pickingPlayer}
-			currentGame={gameState.currentGame}
-			player1Wins={gameState.player1Wins}
-			player2Wins={gameState.player2Wins}
-		/>
+		<!-- <GameStatus
+				gamePhase={gameState.gamePhase}
+				{banningPlayer}
+				{pickingPlayer}
+				currentGame={gameState.currentGame}
+				player1Wins={gameState.player1Wins}
+				player2Wins={gameState.player2Wins}
+			/> -->
 	</div>
 {:else if gameState.gamePhase === 'post-pick' && gameState.selectedStage}
 	<WinnerSelection
