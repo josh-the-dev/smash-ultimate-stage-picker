@@ -1,7 +1,12 @@
 <script lang="ts">
 	import '../../app.css';
 	import LunacityLogo from '$lib/assets/Lunacity_Text.png';
-	import GentlemanButton from '$lib/assets/GentlemanButton.png';
+
+	let streamCookie: string |null = null
+	// @ts-ignore
+	import * as cookies from 'cookie'
+
+
 </script>
 
 <div class="p-20 py-8 max-h-screen">
