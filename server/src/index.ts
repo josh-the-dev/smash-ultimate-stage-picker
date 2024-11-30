@@ -180,7 +180,6 @@ io.on('connection', (socket) => {
 		gameState = getInitialGameState();
 	
 		io.emit('resetState')
-		io.emit('gameState', gameState);
 	});
 
 	socket.on('disconnect', () => {

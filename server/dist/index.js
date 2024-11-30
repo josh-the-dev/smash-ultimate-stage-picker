@@ -145,7 +145,6 @@ io.on('connection', (socket) => {
     socket.on('reset', () => {
         gameState = getInitialGameState();
         io.emit('resetState');
-        io.emit('gameState', gameState);
     });
     socket.on('disconnect', () => {
         console.log('Client disconnected:', socket.id);
