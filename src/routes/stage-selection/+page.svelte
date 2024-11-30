@@ -13,7 +13,7 @@
 	let socket: Socket;
 	let isConnecting = true;
 
-
+	let showGentlemanButton = true;
 
 	// Initialize with complete stage list
 	let gameState: GameState = {
@@ -52,6 +52,11 @@
 			socket.emit('requestState');
 		});
 
+		socket.once('resetState', () => {
+			window.location.href = '/';
+			document.cookie = 'rpsWinner=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+		});
+
 		socket.once('gameOver', () => {
 			window.location.href = '/';
 			document.cookie = 'rpsWinner=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -65,6 +70,12 @@
 					logo: stageList.find((s) => s.id === stage.id)?.logo || ''
 				}))
 			};
+			
+			if(gameState.gamePhase === "picking" && !isGentleman) {
+				showGentlemanButton = false
+				return
+			}
+			showGentlemanButton = true
 		});
 
 		return () => {
@@ -95,14 +106,11 @@
 		isGentleman = true;
 	}
 
-	function resetGame() {
-		socket.emit('reset');
-	}
 
 	// @ts-ignore
 	import * as cookie from 'cookie';
 
-	let showLogo = true;
+
 
 	// Parse cookies on component initialization
 	if (typeof document !== 'undefined') {
@@ -111,22 +119,23 @@
 		
 		// Hide logo if setup cookie is set
 		if (setupCookie) {
-			showLogo = false;
+			showGentlemanButton = false;
 		}
+
 	}
 </script>
 
 {#if isConnecting}
 	<div class="text-center mt-8">
-		<h2 class="text-3xl text-white mb-4">Connecting to server...</h2>
+		<h2 class="text-3xl text-white mb-4 ">Connecting to server...</h2>
 	</div>
 {:else if gameState.gamePhase === 'banning' || gameState.gamePhase === 'picking'}
-	{#if showLogo}	
-	<button class="absolute top-14 right-24" type="button" on:click={skipBanning}>
-		<img src={gameState.gamePhase === "picking" ? returnButton: skipBanningButton} alt="skipBanning"  class="h-12" width={200} />
-	</button>
+	{#if showGentlemanButton}	
+		<button class="absolute top-14 right-24" type="button" on:click={skipBanning}>
+			<img src={gameState.gamePhase === "picking" ? returnButton: skipBanningButton} alt="skipBanning"  class="h-12" width={200} />
+		</button>
 	{/if}
-	<div class="flex flex-col  bg-[#378169] py-2 pb-4 px-4 rounded-md">
+	<div class={`flex flex-col  ${isGentleman ? "bg-[#6A3781]" : "bg-[#378169]"} py-2 pb-4 px-4 rounded-md`}>
 		<div class="flex justify-between items-center">
 			<p class="font-pixelify my-0 text-2xl">{isGentleman ? "GENTLEMEN TO THIS STAGE:":  "STAGE SELECTION"}</p>
 			<img src={minusAndXImage} alt="cross and minus" class="h-4" />
@@ -139,6 +148,7 @@
 			{pickStage}
 			{banningPlayer}
 			currentGame={gameState.currentGame}
+			isGentleman={isGentleman}
 		/>
 	</div>
 {:else if gameState.gamePhase === 'post-pick' && gameState.selectedStage}

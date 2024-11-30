@@ -11,6 +11,8 @@
 	export let pickStage: (stageId: number) => void;
 	export let banningPlayer: number | null;
 	export let currentGame: number;
+	export let isGentleman: boolean = false
+
 
 	const handleSelection = (stageId: number) => {
 		const cookies = cookie.parse(document.cookie);
@@ -65,7 +67,7 @@
 	};
 </script>
 
-<div class="bg-[#142c26] py-6 pb-2 px-8 flex flex-col gap-8 relative">
+	<div class={`${isGentleman ? "bg-[#26142C]" : "bg-[#142c26]"} py-6 pb-2 px-8 flex flex-col gap-8 relative`}>
 	<div class="flex justify-between items-end">
 		{#each gamePhase === 'picking' ? availableStages.slice(0, 5) : stageList.slice(0, 5) as stage (stage.id)}
 			<button
@@ -96,8 +98,8 @@
 			</button>
 		{/each}
 	</div>
-	<div class="bg-[#378169] px-8 mx-auto">
-		<h3 class="font-pixelify text-3xl">
+	<div class={`${isGentleman ? "bg-[#6A3781]" : "bg-[#378169]"} px-8 mx-auto`}>
+		<h3 class="font-pixelify text-3xl ">
 			{phaseText()}
 		</h3>
 	</div>
