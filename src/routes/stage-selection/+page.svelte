@@ -41,7 +41,6 @@
 
 	function calculatePickingPlayer(state: GameState): number | null {
 		if (!state.currentBanningPlayer) return null;
-		console.log(state.currentBanningPlayer);
 		return state.currentGame === 1 ? 1 : state.currentBanningPlayer === 1 ? 2 : 1;
 	}
 
@@ -80,7 +79,6 @@
 	}
 
 	function pickStage(stageId: number) {
-		console.log('Im picking');
 		if (gameState.gamePhase === 'picking') {
 			socket.emit('pickStage', stageId);
 		}

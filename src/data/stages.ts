@@ -10,13 +10,13 @@ import ysImage from '$lib/assets/stages/Yoshis Story.png';
 import type { Stage } from '../types';
 
 export const stageList: Stage[] = [
-	{ id: 1, name: 'battlefield', logo: battlefieldImage },
-	{ id: 2, name: 'small battlefield', logo: sbfImage },
-	{ id: 3, name: 'final destination', logo: fdImage },
-	{ id: 4, name: 'pokemon stadium 2', logo: ps2Image },
-	{ id: 5, name: 'hollow bastion', logo: hbImage },
-	{ id: 6, name: 'smashville', logo: svImage },
-	{ id: 7, name: 'town and city', logo: tacImage },
-	{ id: 8, name: 'kalos pokemon league', logo: kalosImage },
-	{ id: 9, name: "yoshi's story", logo: ysImage }
+	{ id: 1, name: 'Battlefield', logo: battlefieldImage },
+	{ id: 2, name: 'Small Battlefield', logo: sbfImage },
+	{ id: 3, name: 'Final Destination', logo: fdImage },
+	{ id: 4, name: 'Pokemon Stadium 2', logo: ps2Image },
+	{ id: 5, name: 'Hollow Bastion', logo: hbImage },
+	{ id: 6, name: 'Smashville', logo: svImage },
+	{ id: 7, name: 'Town & City', logo: tacImage },
+	{ id: 8, name: 'Kalos Pokemon League', logo: kalosImage },
+	{ id: 9, name: "Yoshi's Story", logo: ysImage }
 ];

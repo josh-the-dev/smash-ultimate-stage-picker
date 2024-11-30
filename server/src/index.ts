@@ -34,15 +34,15 @@ const io = new SocketIOServer(server, {
 
 // Initial stage list
 const startingStageList: Stage[] = [
-	{ id: 1, name: 'battlefield' },
-	{ id: 2, name: 'small battlefield' },
-	{ id: 3, name: 'final destination' },
-	{ id: 4, name: 'pokemon stadium 2' },
-	{ id: 5, name: 'hollow bastion' },
-	{ id: 6, name: 'smashville' },
-	{ id: 7, name: 'town and city' },
-	{ id: 8, name: 'kalos pokemon league' },
-	{ id: 9, name: "yoshi's story" }
+	{ id: 1, name: 'Battlefield' },
+	{ id: 2, name: 'Small Battlefield' },
+	{ id: 3, name: 'Final Destination' },
+	{ id: 4, name: 'Pokemon Stadium 2' },
+	{ id: 5, name: 'Hollow Bastion' },
+	{ id: 6, name: 'Smashville' },
+	{ id: 7, name: 'Town & City' },
+	{ id: 8, name: 'Kalos Pokemon League' },
+	{ id: 9, name: "Yoshi's Story" }
 ];
 
 // Initial game state

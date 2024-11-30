@@ -33,7 +33,6 @@
 		socket = io('https://socket.lunacity.be');
 
 		socket.on('gameState', (data: GameState) => {
-			console.log(data);
 			if (data.currentBanningPlayer) {
 				document.cookie = `rpsWinner=${data.currentBanningPlayer}`;
 				window.location.href = '/stage-selection';

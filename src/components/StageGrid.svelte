@@ -39,6 +39,30 @@
 			return '3';
 		}
 	};
+
+	$: isSetupStream = () => {
+		const cookies = cookie.parse(document.cookie);
+		return cookies['setup'];
+	};
+
+	$: phaseText = () => {
+		if (isSetupStream()){
+			return gamePhase === 'banning' 
+				? `Player ${banningPlayer} Banning` 
+				: `Player ${banningPlayer} Picking`;
+		} else {
+			if (gamePhase === 'banning') {
+				return isPlayerTurn() 
+					? `BAN ${banCount()} STAGES` 
+					: 'OPPONENT IS BANNING';
+			} else if (gamePhase === 'picking') {
+				return isPlayerTurn() 
+					? 'PICK A STAGE' 
+					: 'OPPONENT IS PICKING';
+			}
+		}
+		return '';
+	};
 </script>
 
 <div class="bg-[#142c26] py-6 pb-2 px-8 flex flex-col gap-8 relative">
@@ -74,19 +98,7 @@
 	</div>
 	<div class="bg-[#378169] px-8 mx-auto">
 		<h3 class="font-pixelify text-3xl">
-			{#if gamePhase === 'banning'}
-				{#if isPlayerTurn()}
-					BAN {banCount()} STAGES
-				{:else}
-					OPPONENT IS BANNING
-				{/if}
-			{:else if gamePhase === 'picking'}
-				{#if isPlayerTurn()}
-					PICK A STAGE
-				{:else}
-					OPPONENT IS PICKING
-				{/if}
-			{/if}
+			{phaseText()}
 		</h3>
 	</div>
 </div>
