@@ -19,7 +19,7 @@
 </script>
 
 <div class="p-20 py-8 max-h-screen">
-	<header class="flex justify-between items-center">
+	<header class="flex justify-between items-center mb-8">
 		{#if showLogo}
 			<img 
 				class="w-80 h-20" 
@@ -27,7 +27,6 @@
 				alt="lunacity logo" 
 			/>
 		{/if}
-		<!-- <img class="h-14 mr-8" src={GentlemanButton} alt="Gentleman to stage" /> -->
 	</header>
 	<slot />
 </div>

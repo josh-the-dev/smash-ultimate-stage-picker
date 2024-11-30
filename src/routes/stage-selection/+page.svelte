@@ -6,10 +6,14 @@
 	import WinnerSelection from '../../components/WinnerSelection.svelte';
 	import type { GameState } from '../../types';
 	import { stageList } from '../../data/stages';
-	import { redirect } from '@sveltejs/kit';
+	import skipBanningButton from '$lib/assets/SkipBanningButton.png';
+	import returnButton from '$lib/assets/Return_button.png';
+	import minusAndXImage from '$lib/assets/minus_and_x.png';
 
 	let socket: Socket;
 	let isConnecting = true;
+
+
 
 	// Initialize with complete stage list
 	let gameState: GameState = {
@@ -24,8 +28,8 @@
 		selectedStage: null
 	};
 
+	$: isGentleman = false;
 	$: banningPlayer = calculateBanningPlayer(gameState);
-	$: pickingPlayer = calculatePickingPlayer(gameState);
 
 	function calculateBanningPlayer(state: GameState): number | null {
 		if (!state.currentBanningPlayer) return null;
@@ -39,10 +43,6 @@
 		return state.currentBanningPlayer;
 	}
 
-	function calculatePickingPlayer(state: GameState): number | null {
-		if (!state.currentBanningPlayer) return null;
-		return state.currentGame === 1 ? 1 : state.currentBanningPlayer === 1 ? 2 : 1;
-	}
 
 	onMount(() => {
 		socket = io('https://socket.lunacity.be');
@@ -79,13 +79,40 @@
 	}
 
 	function pickStage(stageId: number) {
+		isGentleman = false;
 		if (gameState.gamePhase === 'picking') {
 			socket.emit('pickStage', stageId);
 		}
 	}
 
+	function skipBanning () {
+		if(gameState.gamePhase === "picking" ){
+			isGentleman = false;
+			socket.emit("returnToBan")
+			return
+		} 
+		socket.emit('skipBan')
+		isGentleman = true;
+	}
+
 	function resetGame() {
 		socket.emit('reset');
+	}
+
+	// @ts-ignore
+	import * as cookie from 'cookie';
+
+	let showLogo = true;
+
+	// Parse cookies on component initialization
+	if (typeof document !== 'undefined') {
+		const cookies = cookie.parse(document.cookie);
+		const setupCookie = cookies['setup'];
+		
+		// Hide logo if setup cookie is set
+		if (setupCookie) {
+			showLogo = false;
+		}
 	}
 </script>
 
@@ -94,7 +121,16 @@
 		<h2 class="text-3xl text-white mb-4">Connecting to server...</h2>
 	</div>
 {:else if gameState.gamePhase === 'banning' || gameState.gamePhase === 'picking'}
-	<div class="flex flex-col gap-4">
+	{#if showLogo}	
+	<button class="absolute top-14 right-24" type="button" on:click={skipBanning}>
+		<img src={gameState.gamePhase === "picking" ? returnButton: skipBanningButton} alt="skipBanning"  class="h-12" width={200} />
+	</button>
+	{/if}
+	<div class="flex flex-col  bg-[#378169] py-2 pb-4 px-4 rounded-md">
+		<div class="flex justify-between items-center">
+			<p class="font-pixelify my-0 text-2xl">{isGentleman ? "GENTLEMEN TO THIS STAGE:":  "STAGE SELECTION"}</p>
+			<img src={minusAndXImage} alt="cross and minus" class="h-4" />
+		</div>
 		<StageGrid
 			{stageList}
 			availableStages={gameState.currentStageList}
@@ -104,14 +140,6 @@
 			{banningPlayer}
 			currentGame={gameState.currentGame}
 		/>
-		<!-- <GameStatus
-				gamePhase={gameState.gamePhase}
-				{banningPlayer}
-				{pickingPlayer}
-				currentGame={gameState.currentGame}
-				player1Wins={gameState.player1Wins}
-				player2Wins={gameState.player2Wins}
-			/> -->
 	</div>
 {:else if gameState.gamePhase === 'post-pick' && gameState.selectedStage}
 	<WinnerSelection

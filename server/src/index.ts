@@ -27,7 +27,7 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
 	cors: {
-		origin: 'https://picker.lunacity.be', // Update this to match your Svelte app's URL
+		origin: 'https://picker.lunacity.be',  // Update this to match your Svelte app's URL
 		methods: ['GET', 'POST']
 	}
 });
@@ -165,6 +165,16 @@ io.on('connection', (socket) => {
 
 		io.emit('gameState', gameState);
 	});
+
+	socket.on('skipBan', () => {
+		gameState = {...gameState, gamePhase: 'picking'}
+		io.emit('gameState', gameState);
+	})
+
+	socket.on('returnToBan', () => {
+		gameState = {...gameState,gamePhase:'banning'}
+		io.emit('gameState', gameState)
+	})
 
 	socket.on('reset', () => {
 		gameState = getInitialGameState();
